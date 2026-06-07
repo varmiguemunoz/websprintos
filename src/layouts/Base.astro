@@ -1,0 +1,133 @@
+---
+import Footer from '@components/global/footer/Footer.astro';
+import Whatsapp from '@/components/global/whatsapp/Whatsapp.astro';
+import GoogleCalendarButton from '@/components/global/google-calendar-button/google-calendar-button.astro';
+
+import { createOgImage } from '@utils/createOgImage';
+import { ViewTransitions } from 'astro:transitions';
+import Analytics from '@vercel/analytics/astro';
+
+import config from '@config/config.json';
+import SpeedInsights from '@vercel/speed-insights/astro';
+
+import '@styles/global.css';
+
+export interface Props {
+  title?: string;
+  meta_title?: string;
+  description?: string;
+  image?: string;
+  noindex?: boolean;
+  canonical?: string;
+  blogpost?: boolean;
+  keywords?: string;
+  schema?: object | object[];
+  ogImageTitle?: string;
+  ogImageMeta?: string;
+  hreflang?: Array<{ lang: string; url: string }>;
+}
+
+const { title, meta_title, description, noindex, keywords, schema, ogImageTitle, ogImageMeta, hreflang } = Astro.props;
+
+// OG Image dinámico por página
+const ogImage = createOgImage({
+  title: ogImageTitle || meta_title || title || 'GrowthlyFast - Monthly Dev Packs & Agency Development',
+  meta: ogImageMeta || description || 'Professional development services for agencies, startups, and contractors.',
+});
+
+// Canonical URL fix
+const canonicalURL = `${config.site.base_url}${Astro.url.pathname.replace(/\/$/, '')}`;
+
+const isPayment = Astro.url.pathname.startsWith('/payment');
+
+// Auto-noindex para payment y funnel pages
+const shouldNoindex = noindex || isPayment;
+---
+
+<!doctype html>
+<html lang={config.site.lang}>
+  <head>
+    <!-- Charset FIRST for security (OWASP best practice) -->
+    <meta charset="utf-8" />
+
+    <!-- Resource hints - Optimized for critical resources -->
+    <link rel="preconnect" href="https://res.cloudinary.com" crossorigin />
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+    <link rel="dns-prefetch" href="https://crm.growthlyfast.com" />
+
+    <!-- favicon -->
+    <link rel="shortcut icon" href={config.site.favicon} />
+
+    <!-- theme meta -->
+    <meta name="theme-name" content="growthlyfast" />
+    <meta name="msapplication-TileColor" content="#000000" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fff" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000" />
+    <meta name="generator" content={Astro.generator} />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <!-- responsive meta -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+
+    <title>{meta_title ? meta_title : title ? title : config.site.title}</title>
+    <meta name="title" content={meta_title ? meta_title : title ? title : config.site.title} />
+
+    <!-- Canonical fix -->
+    <link rel="canonical" href={canonicalURL} itemprop="url" />
+
+    <!-- Hreflang for multilingual support -->
+    {hreflang && hreflang.map((link) => <link rel="alternate" hreflang={link.lang} href={link.url} />)}
+
+    {shouldNoindex && <meta name="robots" content="noindex,nofollow" />}
+
+    <meta name="description" content={description ? description : config.metadata.meta_description} />
+
+    <!-- Keywords (opcional pero útil para contexto) -->
+    {keywords && <meta name="keywords" content={keywords} />}
+
+    <!-- author from config.json -->
+    <meta name="author" content={config.metadata.meta_author} />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={meta_title ? meta_title : title ? title : config.site.title} />
+    <meta property="og:description" content={description ? description : config.metadata.meta_description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:site_name" content="GrowthlyFast" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={meta_title ? meta_title : title ? title : config.site.title} />
+    <meta name="twitter:description" content={description ? description : config.metadata.meta_description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <!-- Schema.org JSON-LD -->
+    {
+      schema &&
+        (Array.isArray(schema) ? (
+          schema.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)
+        ) : (
+          <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+        ))
+    }
+
+    <ViewTransitions />
+  </head>
+
+  <body>
+    <Analytics />
+    <SpeedInsights />
+
+    <main class="mx-auto w-full">
+      <slot />
+    </main>
+
+    <Whatsapp url="sms:+573023278057&body=Hi, I'm interested in your Services 🚀" />
+    <GoogleCalendarButton />
+
+    {!isPayment && <Footer />}
+
+  </body>
+</html>

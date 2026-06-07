@@ -1,0 +1,56 @@
+---
+export const prerender = true;
+
+import { getCollection } from 'astro:content';
+
+import Base from '@layouts/Base.astro';
+
+import Navbar from '@/components/global/navbar';
+import DiscoveryCall from '@/components/global/discovery-call/discovery.astro';
+
+import config from '@config/config.json';
+import Provider from '@/components/global/blog/provider';
+
+
+export async function getStaticPaths({ paginate }: any) {
+  const allPosts = await getCollection('blog');
+
+  const sortedPosts = allPosts
+    .filter((post) => post.data?.draft !== true)
+    .sort((a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime());
+
+  return paginate(sortedPosts, {
+    pageSize: config.site.pageSize || 6,
+  });
+}
+
+const { page } = Astro.props as any;
+
+const posts = (page?.data ?? []).map((p: any) => ({
+  slug: p.slug,
+  title: p.data.title,
+  description: p.data.description,
+  pubDate: new Date(p.data.pubDate).toISOString(),
+  image: p.data.image ?? '',
+  category: p.data.category ?? 'others',
+  readtime: p.data.readtime ?? '',
+}));
+
+const categories = [
+  { id: 'all', label: 'All Posts', color: 'default' },
+  { id: 'dev-tips', label: 'Dev Tips', color: 'primary' },
+  { id: 'automation', label: 'Automation', color: 'accent' },
+  { id: 'ai-tools', label: 'AI Tools', color: 'secondary' },
+  { id: 'agency-workflow', label: 'Agency Workflow', color: 'primary' },
+  { id: 'tech-stack', label: 'Tech Stack', color: 'accent' },
+];
+---
+
+<Base meta_title="Agile Development for Agencies | Blog">
+  <div class="bg-gradient-backgrounded-full min-h-screen w-full">
+    <Navbar client:load />
+
+    <Provider posts={posts} categories={categories} client:load />
+    <DiscoveryCall />
+  </div>
+</Base>
