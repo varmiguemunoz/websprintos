@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Personal portfolio website for varmiguemunoz (Miguel Angel Munoz), built with Astro 5.x and React. The site showcases work, blog posts, and provides services for agencies looking to ship fast, high-performance digital experiences. Features include a blog, payment integration with Stripe, WhatsApp contact integration, and Mailchimp newsletter subscription.
+Personal portfolio website for varmiguemunoz (Miguel Angel Munoz), built with Astro 5.x and React. The site showcases work, blog posts, and provides services for agencies looking to ship fast, high-performance digital experiences. Features include a blog, payment integration with Stripe, WhatsApp contact integration, and Mailchimp newsletter subscriptions.
 
 ## Development Commands
 
