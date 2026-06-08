@@ -21,6 +21,7 @@ export const pricingPlans: PricingPlan[] = [
     features: [
       'Unlimited projects & tasks',
       'Full CLI & TUI access',
+      'Real-time team presence',
       'Local PostgreSQL persistence',
       'GitHub integration',
       'REST API access',
@@ -31,19 +32,12 @@ export const pricingPlans: PricingPlan[] = [
   {
     id: 'supporter',
     name: 'Supporter',
-    subtitle: 'Cloud + Team Sync',
+    subtitle: 'Cloud + Access to new features',
     price: '$5',
     period: 'one-time',
     featured: true,
-    features: [
-      'Everything in Open Source',
-      'Private cloud backup',
-      'Real-time team presence',
-      'Unlimited AI agent tokens',
-      'Priority GitHub sync',
-      'Early access to new features',
-    ],
+    features: ['Everything in Open Source', 'Private cloud backup', 'Early access to new features'],
     cta: 'Buy Now',
-    ctaHref: '#',
+    ctaHref: 'https://buy.stripe.com/6oU8wP5sIaO221l7mk1oI0g',
   },
 ];
