@@ -1,98 +1,225 @@
 ---
-import Base from '@layouts/Base.astro';
+import Base             from '@/layouts/Base.astro';
+import { Navbar }       from '@/components/organisms/Navbar';
+import SprintOSFooter   from '@/components/organisms/SprintOSFooter.astro';
+import { navigationItems, navCta, navPrimary } from '@/data/navigation';
+import { footerLinks, footerMeta }             from '@/data/footer';
+
+const lastUpdated  = 'June 7, 2026';
+const contactName  = 'Miguel Angel Jaramillo Muñoz';
+const contactEmail = 'varmiguemunoz@gmail.com';
 ---
 
-<Base title="Terms and Conditions">
-  <div class="container mx-auto flex w-full max-w-3xl flex-col items-center justify-center py-10">
-    <h1 class="text-2xl font-bold text-white">Terms and Conditions</h1>
+<Base
+  meta_title="Terms & Conditions — SprintOS"
+  description="Terms of service governing your use of SprintOS software and cloud services."
+>
+  <Navbar
+    client:load
+    items={navigationItems}
+    githubHref={navCta.href}
+    ctaLabel={navPrimary.label}
+    ctaHref={navPrimary.href}
+  />
 
-    <pre
-      class="whitespace-pre-wrap leading-relaxed text-white"
-      style={{
-        fontFamily: 'sans-serif',
-      }}>
-  {`
-Terms and Conditions
-1. Introduction
+  <div class="min-h-screen bg-background pt-32 pb-24">
+    <div class="site-container max-w-3xl">
 
-Welcome to Bloomilite LLC (“we”, “the company”, “the provider”). These Terms and Conditions govern the access to and use of our digital services, including development hour packs (Dev Packs), one-time projects (landing pages, redesigns, e-commerce), and other related services in design, development, and technology consulting.
+      <p class="font-mono text-label-sm text-primary uppercase tracking-widest mb-4">Legal</p>
+      <h1 class="font-display text-display-md text-white mb-3">Terms & Conditions</h1>
+      <p class="font-mono text-label-sm text-on-surface-muted mb-12">Last updated: {lastUpdated}</p>
 
-By purchasing any of our services, you expressly agree to these Terms and Conditions. Please read them carefully.
+      <div class="space-y-10">
 
-2. Services
+        <div class="bg-surface-low ghost-border rounded-2xl p-8 md:p-10">
+          <h2 class="font-display text-headline-md text-white mb-4">1. Acceptance</h2>
+          <p class="text-body-md text-on-surface-variant leading-relaxed">
+            By installing, downloading, using, or accessing any part of the SprintOS software or its
+            associated cloud services, you agree to be bound by these Terms and Conditions. If you do not
+            agree to all of these terms, you must not use SprintOS.
+          </p>
+          <p class="text-body-md text-on-surface-variant leading-relaxed mt-4">
+            SprintOS is developed and maintained by{' '}
+            <strong class="text-white">{contactName}</strong>.
+            Questions can be directed to{' '}
+            <a href={`mailto:${contactEmail}`} class="text-primary hover:text-primary-dim transition-colors font-medium">
+              {contactEmail}
+            </a>.
+          </p>
+        </div>
 
-Our services include: web development, redesign, monthly maintenance, audits, UX/UI consulting, and e-commerce setup.
+        <div class="bg-surface-low ghost-border rounded-2xl p-8 md:p-10">
+          <h2 class="font-display text-headline-md text-white mb-4">2. Open Source License (Core Software)</h2>
+          <p class="text-body-md text-on-surface-variant leading-relaxed mb-4">
+            The SprintOS core binary and source code are released under the{' '}
+            <strong class="text-white">MIT License</strong>. You are free to use, copy, modify, merge,
+            publish, distribute, sublicense, and sell copies of the software, subject to the following conditions:
+          </p>
+          <div class="bg-background rounded-xl px-5 py-4 ghost-border font-mono text-mono-sm text-on-surface-variant leading-relaxed">
+            The above copyright notice and this permission notice shall be included in all copies
+            or substantial portions of the Software.
+          </div>
+          <p class="text-body-md text-on-surface-variant leading-relaxed mt-4">
+            The full license text is available in the{' '}
+            <a href="https://github.com/varmiguemunoz/sprintos/blob/main/LICENSE" target="_blank" rel="noopener noreferrer" class="text-primary hover:text-primary-dim transition-colors">
+              GitHub repository
+            </a>.
+            These Terms and Conditions apply to cloud services and the website in addition to the MIT License,
+            not instead of it.
+          </p>
+        </div>
 
-Monthly Dev Packs grant a set number of prepaid development hours, directly integrated into the client’s workflow (Slack, Trello, Asana).
+        <div class="bg-surface-low ghost-border rounded-2xl p-8 md:p-10">
+          <h2 class="font-display text-headline-md text-white mb-4">3. Cloud Services (Supporter Tier)</h2>
+          <p class="text-body-md text-on-surface-variant leading-relaxed mb-4">
+            Certain features — including private cloud backup, real-time team presence, and unlimited AI
+            agent tokens — are offered as a paid cloud service under the Supporter tier.
+          </p>
+          <ul class="space-y-3">
+            {[
+              'Payment is a one-time fee. There are no recurring subscriptions unless explicitly stated.',
+              'Payments are processed via Stripe. SprintOS does not store your card details.',
+              'Cloud features activate immediately upon confirmed payment.',
+              'The one-time fee is non-refundable once cloud services have been provisioned, except where required by applicable law.',
+              'We reserve the right to modify, suspend, or discontinue cloud features with reasonable prior notice (minimum 30 days).',
+            ].map(item => (
+              <li class="flex items-start gap-3 text-body-md text-on-surface-variant">
+                <span class="w-1.5 h-1.5 rounded-full bg-secondary mt-2 shrink-0"></span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
 
-One-time projects are quoted and delivered independently, with fixed pricing based on the agreed scope.
+        <div class="bg-surface-low ghost-border rounded-2xl p-8 md:p-10">
+          <h2 class="font-display text-headline-md text-white mb-4">4. Permitted & Prohibited Use</h2>
+          <p class="text-body-md text-on-surface-variant leading-relaxed mb-5">
+            You may use SprintOS for any lawful purpose, including commercial use, in accordance with
+            the MIT License. You may <strong class="text-white">not</strong>:
+          </p>
+          <ul class="space-y-3">
+            {[
+              'Use SprintOS to violate any applicable local, national, or international laws or regulations.',
+              'Attempt to gain unauthorised access to other users\' data, SprintOS infrastructure, or third-party systems.',
+              'Distribute malware, ransomware, or malicious scripts through SprintOS integrations or webhooks.',
+              'Infringe the intellectual property rights of SprintOS or any third party.',
+              'Misrepresent affiliation with SprintOS or use the SprintOS name in a way that implies official endorsement.',
+            ].map(item => (
+              <li class="flex items-start gap-3 text-body-md text-on-surface-variant">
+                <span class="w-1.5 h-1.5 rounded-full bg-error/70 mt-2 shrink-0"></span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
 
-Published prices do not include taxes or third-party services such as hosting, domains, or software licenses unless explicitly stated.
+        <div class="bg-surface-low ghost-border rounded-2xl p-8 md:p-10">
+          <h2 class="font-display text-headline-md text-white mb-4">5. Data Ownership</h2>
+          <p class="text-body-md text-on-surface-variant leading-relaxed">
+            All content you create within SprintOS — including projects, tasks, sprints, comments, time logs,
+            and team data — belongs entirely to you. SprintOS does not claim any ownership over your
+            organisational data. You are solely responsible for the content you store and process using the software.
+          </p>
+        </div>
 
-3. Conditions of Use
+        <div class="bg-surface-low ghost-border rounded-2xl p-8 md:p-10">
+          <h2 class="font-display text-headline-md text-white mb-4">6. GitHub Integration</h2>
+          <p class="text-body-md text-on-surface-variant leading-relaxed">
+            The GitHub integration feature connects SprintOS to your GitHub repositories via OAuth and
+            webhooks. By enabling this integration, you authorise SprintOS to read pull request and
+            issue events for the purpose of moving tasks between board states. SprintOS will never
+            commit code, merge pull requests, or modify repository content on your behalf.
+          </p>
+        </div>
 
-The client agrees to provide all necessary information and access needed for service execution.
+        <div class="bg-surface-low ghost-border rounded-2xl p-8 md:p-10">
+          <h2 class="font-display text-headline-md text-white mb-4">7. API & Webhooks</h2>
+          <p class="text-body-md text-on-surface-variant leading-relaxed mb-4">
+            SprintOS provides a REST API accessible with keys generated via{' '}
+            <code class="font-mono text-mono-sm text-primary bg-surface-container px-1.5 py-0.5 rounded">sprintos api-key create</code>.
+            You are responsible for keeping your API keys confidential. If a key is compromised,
+            revoke it immediately with{' '}
+            <code class="font-mono text-mono-sm text-primary bg-surface-container px-1.5 py-0.5 rounded">sprintos api-key revoke</code>.
+          </p>
+          <p class="text-body-md text-on-surface-variant leading-relaxed">
+            Rate limits apply: 60 requests per minute per API key. Excessive automated traffic
+            that degrades service availability for other users may result in temporary access suspension.
+          </p>
+        </div>
 
-The client is responsible for the accuracy and legality of all content (texts, images, trademarks) provided.
+        <div class="bg-surface-low ghost-border rounded-2xl p-8 md:p-10">
+          <h2 class="font-display text-headline-md text-white mb-4">8. Disclaimer of Warranties</h2>
+          <p class="text-body-md text-on-surface-variant leading-relaxed">
+            SprintOS is provided <strong class="text-white">"as is"</strong> and{' '}
+            <strong class="text-white">"as available"</strong> without warranty of any kind, express or implied,
+            including but not limited to warranties of merchantability, fitness for a particular purpose,
+            or non-infringement. We do not warrant that the software will be error-free, uninterrupted,
+            or free of security vulnerabilities. Use of SprintOS is at your own risk.
+          </p>
+        </div>
 
-Deliverables may not be used for unlawful purposes or in violation of applicable laws.
+        <div class="bg-surface-low ghost-border rounded-2xl p-8 md:p-10">
+          <h2 class="font-display text-headline-md text-white mb-4">9. Limitation of Liability</h2>
+          <p class="text-body-md text-on-surface-variant leading-relaxed">
+            To the maximum extent permitted by applicable law, {contactName} shall not be liable for
+            any indirect, incidental, special, consequential, or punitive damages arising from your use
+            of SprintOS, including but not limited to loss of data, loss of profits, or service interruption,
+            even if advised of the possibility of such damages. Total aggregate liability shall not exceed
+            the amount you paid for the Supporter tier, if any.
+          </p>
+        </div>
 
-4. Payments and Billing
+        <div class="bg-surface-low ghost-border rounded-2xl p-8 md:p-10">
+          <h2 class="font-display text-headline-md text-white mb-4">10. Changes to These Terms</h2>
+          <p class="text-body-md text-on-surface-variant leading-relaxed">
+            We may update these Terms at any time. For material changes, we will provide at least
+            14 days' notice via a pinned announcement in the{' '}
+            <a href="https://github.com/varmiguemunoz/sprintos/discussions" target="_blank" rel="noopener noreferrer" class="text-primary hover:text-primary-dim transition-colors">
+              GitHub Discussions
+            </a>{' '}
+            forum. Continued use of SprintOS after the effective date constitutes acceptance of the revised Terms.
+          </p>
+        </div>
 
-All services must be paid in advance.
+        <div class="bg-surface-low ghost-border rounded-2xl p-8 md:p-10">
+          <h2 class="font-display text-headline-md text-white mb-4">11. Governing Law</h2>
+          <p class="text-body-md text-on-surface-variant leading-relaxed">
+            These Terms are governed by and construed in accordance with the laws of the
+            Republic of Colombia, without regard to conflict of law principles. Any dispute
+            arising from these Terms shall first be attempted to be resolved through good-faith
+            negotiation. If unresolved within 30 days, disputes shall be subject to the
+            competent courts of Medellín, Colombia.
+          </p>
+        </div>
 
-Monthly packages renew automatically unless cancellation is requested at least 7 days before the renewal date.
+        <div class="bg-surface-low ghost-border rounded-2xl p-8 md:p-10">
+          <h2 class="font-display text-headline-md text-white mb-4">12. Contact</h2>
+          <p class="text-body-md text-on-surface-variant leading-relaxed mb-5">
+            For any questions, legal notices, or concerns regarding these Terms, reach out directly:
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4">
+            <a
+              href={`mailto:${contactEmail}`}
+              class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-primary/10 border border-primary/20 text-primary font-medium text-body-sm hover:bg-primary/15 transition-colors"
+            >
+              <span class="material-symbols-outlined text-sm">mail</span>
+              {contactEmail}
+            </a>
+            <a
+              href="https://github.com/varmiguemunoz/sprintos/discussions"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-surface-container ghost-border text-on-surface-variant font-medium text-body-sm hover:text-white transition-colors"
+            >
+              <span class="material-symbols-outlined text-sm">forum</span>
+              GitHub Discussions
+            </a>
+          </div>
+        </div>
 
-One-time projects require a single upfront payment under the agreed terms.
-
-Service delivery may be suspended in case of non-payment until the account is settled.
-
-5. Deliverables and Support
-
-Delivery timelines will be specified in each individual proposal or service contract.
-
-Basic post-delivery support is provided for 15 days unless a maintenance plan is contracted.
-
-Standard response time for support channels is up to 24 business hours.
-
-6. Modifications and Scope
-
-Any changes to the originally agreed scope may incur additional costs, subject to client approval.
-
-Dev Packs allow flexible use of hours across different tasks within the contracted limit.
-
-7. Cancellations and Refunds
-
-Services already started or delivered are non-refundable.
-
-In the case of Dev Packs, if the client cancels before using all hours, no refund will be issued, but the plan may be paused for future use.
-
-The full refund policy is detailed in our Refund Policy section.
-
-8. Intellectual Property
-
-The client retains ownership of their original content and trademarks.
-
-Code and designs developed by us are transferred to the client once full payment has been completed, except for third-party components subject to external licenses.
-
-9. Limitation of Liability
-
-We do not guarantee specific business outcomes (sales, traffic, conversions).
-
-We are not liable for hosting downtime, domain issues, or third-party service failures outside of our contracts.
-
-10. Data Privacy
-
-The use of personal data is governed by our Privacy Policy, which forms an integral part of these Terms.
-
-11. Changes to Terms
-
-We reserve the right to update or modify these Terms at any time. Changes will take effect once published on our website.
-
-12. Governing Law
-
-These Terms are governed by the laws of United States of America. Any disputes will be subject to the competent courts in that jurisdiction. `}
-</pre>
+      </div>
+    </div>
   </div>
+
+  <SprintOSFooter groups={footerLinks} meta={footerMeta} />
 </Base>
- ---

@@ -1,0 +1,36 @@
+---
+import SectionLabel  from '@/components/atoms/SectionLabel.astro';
+import FeatureCard   from '@/components/molecules/FeatureCard.astro';
+import type { FeatureCard as FC } from '@/data/features';
+
+interface Props {
+  cards: FC[];
+}
+
+const { cards } = Astro.props;
+---
+
+<section id="features" class="py-32 bg-surface">
+  <div class="site-container">
+    <div class="mb-20 max-w-xl">
+      <SectionLabel label="Why SprintOS" accent="primary" />
+      <h2 class="font-display text-display-md text-white mt-4 mb-4">
+        Total Control.<br />Zero Context Switching.
+      </h2>
+      <p class="text-body-lg text-on-surface-variant">
+        Six core pillars engineered to keep you in the zone, from backlog to deployment.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      {cards.map(card => (
+        <FeatureCard
+          icon={card.icon}
+          title={card.title}
+          description={card.description}
+          accent={card.accent}
+        />
+      ))}
+    </div>
+  </div>
+</section>

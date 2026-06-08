@@ -1,98 +1,197 @@
 ---
-import Base from '@layouts/Base.astro';
+import Base             from '@/layouts/Base.astro';
+import { Navbar }       from '@/components/organisms/Navbar';
+import SprintOSFooter   from '@/components/organisms/SprintOSFooter.astro';
+import { navigationItems, navCta, navPrimary } from '@/data/navigation';
+import { footerLinks, footerMeta }             from '@/data/footer';
+
+const lastUpdated = 'June 7, 2026';
+const contactName  = 'Miguel Angel Jaramillo Muñoz';
+const contactEmail = 'varmiguemunoz@gmail.com';
 ---
 
-<Base title="Terms and Conditions">
-  <div class="container mx-auto flex w-full max-w-3xl flex-col items-center justify-center py-10">
-    <h1 class="text-2xl font-bold text-white">Terms and Conditions</h1>
+<Base
+  meta_title="Privacy Policy — SprintOS"
+  description="How SprintOS collects, uses, and protects your data."
+>
+  <Navbar
+    client:load
+    items={navigationItems}
+    githubHref={navCta.href}
+    ctaLabel={navPrimary.label}
+    ctaHref={navPrimary.href}
+  />
 
-    <pre
-      class="whitespace-pre-wrap leading-relaxed text-white"
-      style={{
-        fontFamily: 'sans-serif',
-      }}>
-  {`
-Terms and Conditions
-1. Introduction
+  <div class="min-h-screen bg-background pt-32 pb-24">
+    <div class="site-container max-w-3xl">
 
-Welcome to Bloomilite LLC (“we”, “the company”, “the provider”). These Terms and Conditions govern the access to and use of our digital services, including development hour packs (Dev Packs), one-time projects (landing pages, redesigns, e-commerce), and other related services in design, development, and technology consulting.
+      <p class="font-mono text-label-sm text-primary uppercase tracking-widest mb-4">Legal</p>
+      <h1 class="font-display text-display-md text-white mb-3">Privacy Policy</h1>
+      <p class="font-mono text-label-sm text-on-surface-muted mb-12">Last updated: {lastUpdated}</p>
 
-By purchasing any of our services, you expressly agree to these Terms and Conditions. Please read them carefully.
+      <div class="space-y-10">
 
-2. Services
+        <div class="bg-surface-low ghost-border rounded-2xl p-8 md:p-10">
+          <h2 class="font-display text-headline-md text-white mb-4">1. Who We Are</h2>
+          <p class="text-body-md text-on-surface-variant leading-relaxed">
+            SprintOS is a terminal-first project management tool developed and maintained by
+            <strong class="text-white">{contactName}</strong>.
+            This Privacy Policy describes how SprintOS handles data when you use the software,
+            the website at <code class="font-mono text-mono-sm text-primary bg-surface-container px-1.5 py-0.5 rounded">sprintos.dev</code>,
+            or any associated cloud services.
+          </p>
+          <p class="text-body-md text-on-surface-variant leading-relaxed mt-4">
+            For any privacy-related questions, contact:
+            <a href={`mailto:${contactEmail}`} class="text-primary hover:text-primary-dim transition-colors font-medium">
+              {contactEmail}
+            </a>
+          </p>
+        </div>
 
-Our services include: web development, redesign, monthly maintenance, audits, UX/UI consulting, and e-commerce setup.
+        <div class="bg-surface-low ghost-border rounded-2xl p-8 md:p-10">
+          <h2 class="font-display text-headline-md text-white mb-4">2. Self-Hosted vs. Cloud</h2>
+          <p class="text-body-md text-on-surface-variant leading-relaxed mb-4">
+            SprintOS is <strong class="text-white">self-hosted by default</strong>. When you run SprintOS on your own
+            infrastructure — whether a local machine, VPS, or managed PostgreSQL provider (Supabase, Neon, Railway) —
+            all data including projects, tasks, sprints, time logs, comments, and team members is stored exclusively
+            in <em>your</em> database. We have no access to it.
+          </p>
+          <p class="text-body-md text-on-surface-variant leading-relaxed">
+            The <strong class="text-white">Supporter tier</strong> cloud features involve SprintOS-managed infrastructure.
+            For those users only, the data practices in sections 3–6 apply.
+          </p>
+        </div>
 
-Monthly Dev Packs grant a set number of prepaid development hours, directly integrated into the client’s workflow (Slack, Trello, Asana).
+        <div class="bg-surface-low ghost-border rounded-2xl p-8 md:p-10">
+          <h2 class="font-display text-headline-md text-white mb-4">3. Data We Collect</h2>
+          <div class="space-y-5">
+            <div>
+              <h3 class="font-display text-headline-sm text-white mb-2">GitHub OAuth (all users)</h3>
+              <p class="text-body-md text-on-surface-variant leading-relaxed">
+                Authentication is handled via GitHub OAuth. We request read-only access to your public profile
+                (username, display name, avatar URL) and your primary email address for account identification.
+                We do <strong class="text-white">not</strong> request write access to your repositories, issues,
+                or pull requests unless you explicitly enable the GitHub sync integration.
+              </p>
+            </div>
+            <div>
+              <h3 class="font-display text-headline-sm text-white mb-2">Cloud backup (Supporter tier)</h3>
+              <p class="text-body-md text-on-surface-variant leading-relaxed">
+                If you activate cloud backup, we store an encrypted snapshot of your SprintOS database schema
+                and data. Your database connection string is encrypted at rest using AES-256 and is never
+                logged or exposed in plaintext.
+              </p>
+            </div>
+            <div>
+              <h3 class="font-display text-headline-sm text-white mb-2">Website analytics</h3>
+              <p class="text-body-md text-on-surface-variant leading-relaxed">
+                The SprintOS website uses <strong class="text-white">Vercel Analytics</strong>, which collects
+                anonymised page view counts and performance metrics. It does not use cookies, does not fingerprint
+                browsers, and does not collect personally identifiable information from visitors.
+              </p>
+            </div>
+          </div>
+        </div>
 
-One-time projects are quoted and delivered independently, with fixed pricing based on the agreed scope.
+        <div class="bg-surface-low ghost-border rounded-2xl p-8 md:p-10">
+          <h2 class="font-display text-headline-md text-white mb-4">4. How We Use Your Data</h2>
+          <ul class="space-y-3">
+            {[
+              'Authenticate your identity via GitHub OAuth and maintain your session.',
+              'Associate your account with your SprintOS organisation and team.',
+              'Deliver cloud backup and real-time team sync features (Supporter tier only).',
+              'Send transactional emails for account events such as team invitations (if SMTP is configured by you).',
+              'Measure aggregate website usage to improve performance (anonymous only).',
+            ].map(item => (
+              <li class="flex items-start gap-3 text-body-md text-on-surface-variant">
+                <span class="w-1.5 h-1.5 rounded-full bg-secondary mt-2 shrink-0"></span>
+                {item}
+              </li>
+            ))}
+          </ul>
+          <p class="text-body-md text-on-surface-variant leading-relaxed mt-5">
+            We do <strong class="text-white">not</strong> sell, rent, or share your personal data with
+            third parties for advertising or marketing purposes.
+          </p>
+        </div>
 
-Published prices do not include taxes or third-party services such as hosting, domains, or software licenses unless explicitly stated.
+        <div class="bg-surface-low ghost-border rounded-2xl p-8 md:p-10">
+          <h2 class="font-display text-headline-md text-white mb-4">5. Third-Party Integrations</h2>
+          <p class="text-body-md text-on-surface-variant leading-relaxed mb-4">
+            SprintOS optionally integrates with the following services, each initiated by you and
+            governed by their own privacy policies:
+          </p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {[
+              { name: 'GitHub', use: 'Issue and PR sync' },
+              { name: 'Slack / Discord', use: 'Notification webhooks' },
+              { name: 'Zapier / Make', use: 'Outbound webhooks' },
+              { name: 'Supabase / Neon / Railway', use: 'Database hosting' },
+            ].map(svc => (
+              <div class="flex items-center gap-3 px-4 py-3 bg-surface-container rounded-lg ghost-border">
+                <span class="w-1.5 h-1.5 rounded-full bg-primary shrink-0"></span>
+                <span class="text-body-sm text-white font-medium">{svc.name}</span>
+                <span class="text-body-sm text-on-surface-muted ml-auto">{svc.use}</span>
+              </div>
+            ))}
+          </div>
+        </div>
 
-3. Conditions of Use
+        <div class="bg-surface-low ghost-border rounded-2xl p-8 md:p-10">
+          <h2 class="font-display text-headline-md text-white mb-4">6. Data Retention & Deletion</h2>
+          <p class="text-body-md text-on-surface-variant leading-relaxed mb-4">
+            <strong class="text-white">Self-hosted:</strong> All data retention is controlled entirely by you.
+            Delete your database and all SprintOS data is gone.
+          </p>
+          <p class="text-body-md text-on-surface-variant leading-relaxed">
+            <strong class="text-white">Cloud (Supporter tier):</strong> Your data is retained for the duration
+            of your account. Upon written request to{' '}
+            <a href={`mailto:${contactEmail}`} class="text-primary hover:text-primary-dim transition-colors">{contactEmail}</a>,
+            all cloud-stored data will be permanently deleted within <strong class="text-white">30 days</strong>.
+          </p>
+        </div>
 
-The client agrees to provide all necessary information and access needed for service execution.
+        <div class="bg-surface-low ghost-border rounded-2xl p-8 md:p-10">
+          <h2 class="font-display text-headline-md text-white mb-4">7. Security</h2>
+          <p class="text-body-md text-on-surface-variant leading-relaxed">
+            All data in transit is encrypted via TLS 1.2+. Cloud backup data is encrypted at rest with AES-256.
+            API keys generated by <code class="font-mono text-mono-sm text-primary bg-surface-container px-1.5 py-0.5 rounded">sprintos api-key create</code> are
+            hashed before storage and displayed only once at creation time. We perform regular dependency
+            audits and follow responsible disclosure practices. To report a security issue, email{' '}
+            <a href={`mailto:${contactEmail}`} class="text-primary hover:text-primary-dim transition-colors">{contactEmail}</a>.
+          </p>
+        </div>
 
-The client is responsible for the accuracy and legality of all content (texts, images, trademarks) provided.
+        <div class="bg-surface-low ghost-border rounded-2xl p-8 md:p-10">
+          <h2 class="font-display text-headline-md text-white mb-4">8. Your Rights</h2>
+          <p class="text-body-md text-on-surface-variant leading-relaxed mb-4">
+            Depending on your jurisdiction, you may have the right to access, rectify, port, or erase
+            your personal data. To exercise any of these rights, contact:
+          </p>
+          <a
+            href={`mailto:${contactEmail}`}
+            class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-primary/10 border border-primary/20 text-primary font-medium text-body-sm hover:bg-primary/15 transition-colors"
+          >
+            <span class="material-symbols-outlined text-sm">mail</span>
+            {contactEmail}
+          </a>
+        </div>
 
-Deliverables may not be used for unlawful purposes or in violation of applicable laws.
+        <div class="bg-surface-low ghost-border rounded-2xl p-8 md:p-10">
+          <h2 class="font-display text-headline-md text-white mb-4">9. Changes to This Policy</h2>
+          <p class="text-body-md text-on-surface-variant leading-relaxed">
+            We may update this Privacy Policy when the product changes meaningfully. Material updates will be
+            announced in the SprintOS{' '}
+            <a href="https://github.com/varmiguemunoz/sprintos/releases" target="_blank" rel="noopener noreferrer" class="text-primary hover:text-primary-dim transition-colors">
+              GitHub changelog
+            </a>.
+            The "Last updated" date at the top of this page always reflects the current version.
+          </p>
+        </div>
 
-4. Payments and Billing
-
-All services must be paid in advance.
-
-Monthly packages renew automatically unless cancellation is requested at least 7 days before the renewal date.
-
-One-time projects require a single upfront payment under the agreed terms.
-
-Service delivery may be suspended in case of non-payment until the account is settled.
-
-5. Deliverables and Support
-
-Delivery timelines will be specified in each individual proposal or service contract.
-
-Basic post-delivery support is provided for 15 days unless a maintenance plan is contracted.
-
-Standard response time for support channels is up to 24 business hours.
-
-6. Modifications and Scope
-
-Any changes to the originally agreed scope may incur additional costs, subject to client approval.
-
-Dev Packs allow flexible use of hours across different tasks within the contracted limit.
-
-7. Cancellations and Refunds
-
-Services already started or delivered are non-refundable.
-
-In the case of Dev Packs, if the client cancels before using all hours, no refund will be issued, but the plan may be paused for future use.
-
-The full refund policy is detailed in our Refund Policy section.
-
-8. Intellectual Property
-
-The client retains ownership of their original content and trademarks.
-
-Code and designs developed by us are transferred to the client once full payment has been completed, except for third-party components subject to external licenses.
-
-9. Limitation of Liability
-
-We do not guarantee specific business outcomes (sales, traffic, conversions).
-
-We are not liable for hosting downtime, domain issues, or third-party service failures outside of our contracts.
-
-10. Data Privacy
-
-The use of personal data is governed by our Privacy Policy, which forms an integral part of these Terms.
-
-11. Changes to Terms
-
-We reserve the right to update or modify these Terms at any time. Changes will take effect once published on our website.
-
-12. Governing Law
-
-These Terms are governed by the laws of United States of America. Any disputes will be subject to the competent courts in that jurisdiction. `}
-</pre>
+      </div>
+    </div>
   </div>
+
+  <SprintOSFooter groups={footerLinks} meta={footerMeta} />
 </Base>
- ---

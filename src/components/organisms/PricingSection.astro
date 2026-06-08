@@ -1,0 +1,40 @@
+---
+import SectionLabel from '@/components/atoms/SectionLabel.astro';
+import PricingCard  from '@/components/molecules/PricingCard.astro';
+import type { PricingPlan } from '@/data/pricing';
+
+interface Props {
+  plans: PricingPlan[];
+}
+
+const { plans } = Astro.props;
+---
+
+<section id="pricing" class="py-32 bg-background">
+  <div class="site-container">
+    <div class="text-center mb-16">
+      <SectionLabel label="Pricing" align="center" />
+      <h2 class="font-display text-display-md text-white mt-4 mb-4">
+        Simple & Transparent
+      </h2>
+      <p class="text-body-lg text-on-surface-variant max-w-xl mx-auto">
+        Open source at its core. Pay once to support development and unlock team features.
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6 items-start">
+      {plans.map(plan => (
+        <PricingCard
+          name={plan.name}
+          subtitle={plan.subtitle}
+          price={plan.price}
+          period={plan.period}
+          featured={plan.featured}
+          features={plan.features}
+          cta={plan.cta}
+          ctaHref={plan.ctaHref}
+        />
+      ))}
+    </div>
+  </div>
+</section>

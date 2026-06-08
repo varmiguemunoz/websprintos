@@ -2,83 +2,109 @@
 export const prerender = true;
 
 import { type CollectionEntry, getCollection } from 'astro:content';
-import Navbar from '@/components/global/navbar';
-import NavigationBlog from '@/components/global/blog/navigation-blog';
-import HeroPostBlog from '@/components/global/blog/hero-post-blog/index.astro';
-import DiscoveryCall from '@/components/global/discovery-call/discovery.astro';
-
-import Code from '@components/mdx/Code.astro';
-import Base from '@/layouts/Base.astro';
+import Base             from '@/layouts/Base.astro';
+import { Navbar }       from '@/components/organisms/Navbar';
+import BlogPostHero     from '@/components/atoms/BlogPostHero.astro';
+import BlogNavigation   from '@/components/molecules/BlogNavigation.astro';
+import SprintOSFooter   from '@/components/organisms/SprintOSFooter.astro';
+import Code             from '@components/mdx/Code.astro';
+import { navigationItems, navCta, navPrimary } from '@/data/navigation';
+import { footerLinks, footerMeta }             from '@/data/footer';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
 
   const sorted = posts
-    .filter((post) => !post.data.draft)
+    .filter(p => !p.data.draft)
     .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
-  return sorted.map((post, index) => {
-    const previousPost = sorted[index + 1] || null;
-    const nextPost = sorted[index - 1] || null;
-
-    return {
-      params: { slug: post.slug },
-      props: {
-        ...post,
-        previousPost,
-        nextPost,
-      },
-    };
-  });
+  return sorted.map((post, index) => ({
+    params: { slug: post.slug },
+    props: {
+      ...post,
+      previousPost: sorted[index + 1] ?? null,
+      nextPost:     sorted[index - 1] ?? null,
+    },
+  }));
 }
 
-type Props = CollectionEntry<'blog'>;
+type Props = CollectionEntry<'blog'> & {
+  previousPost: CollectionEntry<'blog'> | null;
+  nextPost:     CollectionEntry<'blog'> | null;
+};
 
 const post = Astro.props as any;
 const { Content } = await post.render();
-
-const formatDate = (dateString: string) =>
-  new Date(dateString).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
 ---
 
-<Base meta_title={`Agile Development for Agencies | ${post.data.title}`}>
-  <div class="min-h-screen bg-gradient-background">
-    <Navbar client:load />
+<Base
+  meta_title={`${post.data.title} — SprintOS Blog`}
+  description={post.data.description}
+  image={post.data.image}
+>
+  <Navbar
+    client:load
+    items={navigationItems}
+    githubHref={navCta.href}
+    ctaLabel={navPrimary.label}
+    ctaHref={navPrimary.href}
+  />
 
-    <HeroPostBlog blogPost={post as any} formatDate={formatDate} />
+  <div class="bg-background min-h-screen">
+    <BlogPostHero
+      title={post.data.title}
+      description={post.data.description}
+      pubDate={post.data.pubDate}
+      category={post.data.category}
+      readtime={post.data.readtime}
+      authors={post.data.authors}
+    />
 
-    {/* Cover Image */}
-    <section class="mb-12 px-4">
-      <div class="mx-auto max-w-5xl">
-        <div class="group relative overflow-hidden rounded-2xl">
+    {post.data.image && (
+      <div class="site-container max-w-4xl mb-12">
+        <div class="relative rounded-2xl overflow-hidden aspect-[16/7]">
           <img
             src={post.data.image}
             alt={post.data.title}
-            class="h-[400px] w-full object-cover transition-transform duration-700 group-hover:scale-105 md:h-[500px]"
-            loading="lazy"
+            class="w-full h-full object-cover"
+            loading="eager"
           />
-          <div class="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent"></div>
-          <div
-            class="bg-gradient-primary/10 absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-          >
-          </div>
+          <div class="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent" />
         </div>
       </div>
-    </section>
+    )}
 
-    <div class="mx-auto max-w-4xl px-4">
-      <article
-        class="prose prose-lg prose-invert mb-16 max-w-none rounded-2xl border border-border bg-gradient-card p-8 md:p-12"
-      >
+    <div class="site-container max-w-4xl pb-24">
+      <article class="prose prose-invert prose-lg max-w-none
+        prose-headings:font-display prose-headings:tracking-tight prose-headings:text-white
+        prose-p:text-on-surface-variant prose-p:leading-relaxed
+        prose-a:text-primary prose-a:no-underline hover:prose-a:text-primary-dim
+        prose-code:text-secondary prose-code:font-mono prose-code:text-sm prose-code:bg-surface-container prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded
+        prose-pre:bg-transparent prose-pre:p-0 prose-pre:border-0
+        prose-blockquote:border-primary prose-blockquote:text-on-surface-variant
+        prose-strong:text-white prose-strong:font-semibold
+        prose-hr:border-white/[0.06]
+        mb-16 rounded-2xl bg-surface-low ghost-border p-8 md:p-12
+      ">
         <Content components={{ pre: Code }} />
       </article>
-      <NavigationBlog previousPost={post.previousPost} nextPost={post.nextPost} />
+
+      <BlogNavigation
+        previousPost={post.previousPost}
+        nextPost={post.nextPost}
+      />
+
+      <div class="flex justify-center">
+        <a
+          href="/blog"
+          class="inline-flex items-center gap-2 text-body-sm text-on-surface-variant hover:text-white transition-colors"
+        >
+          <span class="material-symbols-outlined text-sm">arrow_back</span>
+          Back to all articles
+        </a>
+      </div>
     </div>
   </div>
 
-  <DiscoveryCall />
+  <SprintOSFooter groups={footerLinks} meta={footerMeta} />
 </Base>

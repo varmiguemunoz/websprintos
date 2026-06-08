@@ -1,0 +1,24 @@
+---
+type Method = 'GET' | 'POST' | 'PATCH' | 'DELETE';
+
+interface Props {
+  method:      Method;
+  path:        string;
+  description: string;
+}
+
+const { method, path, description } = Astro.props;
+
+const methodColors: Record<Method, string> = {
+  GET:    'text-secondary',
+  POST:   'text-primary',
+  PATCH:  'text-warning',
+  DELETE: 'text-error',
+};
+---
+
+<div class="bg-surface-container rounded-lg border border-white/[0.06] px-5 py-3 flex items-center gap-4 hover:border-white/10 transition-colors group">
+  <span class={`font-mono text-mono-sm font-bold w-14 shrink-0 ${methodColors[method]}`}>{method}</span>
+  <code class="font-mono text-mono-sm text-on-surface flex-1 group-hover:text-primary-dim transition-colors">{path}</code>
+  <span class="text-body-sm text-on-surface-muted text-right hidden md:block">{description}</span>
+</div>

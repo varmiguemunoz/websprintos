@@ -1,0 +1,23 @@
+---
+interface Props {
+  icon:        string;
+  title:       string;
+  description: string;
+  accent?:     'primary' | 'secondary';
+}
+
+const { icon, title, description, accent = 'primary' } = Astro.props;
+
+const iconBg    = accent === 'secondary' ? 'bg-secondary/10' : 'bg-primary/10';
+const iconColor = accent === 'secondary' ? 'text-secondary'  : 'text-primary';
+---
+
+<article class="feature-card p-8 rounded-2xl bg-surface-low ghost-border flex flex-col gap-5">
+  <div class={`w-12 h-12 rounded-xl ${iconBg} flex items-center justify-center ${iconColor} shrink-0`}>
+    <span class="material-symbols-outlined text-xl">{icon}</span>
+  </div>
+  <div>
+    <h3 class="font-display text-headline-sm text-white mb-2">{title}</h3>
+    <p class="text-body-sm text-on-surface-variant leading-relaxed">{description}</p>
+  </div>
+</article>

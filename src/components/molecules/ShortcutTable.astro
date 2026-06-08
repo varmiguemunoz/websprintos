@@ -1,0 +1,32 @@
+---
+interface Row { key: string; action: string; }
+
+interface Props {
+  title:  string;
+  accent: 'primary' | 'secondary';
+  rows:   Row[];
+}
+
+const { title, accent, rows } = Astro.props;
+
+const borderColor = accent === 'secondary' ? 'border-secondary' : 'border-primary';
+const textColor   = accent === 'secondary' ? 'text-secondary'   : 'text-primary';
+---
+
+<div>
+  <h4 class={`font-bold text-sm mb-5 pl-4 border-l-2 ${borderColor} ${textColor} uppercase tracking-widest font-mono`}>
+    {title}
+  </h4>
+  <table class="w-full font-mono text-mono-md">
+    <tbody>
+      {rows.map(row => (
+        <tr class="border-b border-white/[0.04] group">
+          <td class="py-3 pr-4 text-on-surface-variant group-hover:text-primary transition-colors whitespace-nowrap">
+            {row.key}
+          </td>
+          <td class="py-3 text-right text-on-surface">{row.action}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>

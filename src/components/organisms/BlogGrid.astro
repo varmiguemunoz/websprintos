@@ -1,0 +1,113 @@
+---
+import BlogCard         from '@/components/molecules/BlogCard.astro';
+import BlogCardFeatured from '@/components/molecules/BlogCardFeatured.astro';
+
+interface Post {
+  slug:        string;
+  title:       string;
+  description: string;
+  pubDate:     Date;
+  image?:      string;
+  category:    string;
+  readtime?:   string;
+}
+
+interface Category {
+  id:    string;
+  label: string;
+}
+
+interface Props {
+  posts:      Post[];
+  categories: Category[];
+  page:       { currentPage: number; lastPage: number; url: { prev?: string; next?: string } };
+}
+
+const { posts, categories, page } = Astro.props;
+
+const currentCategory = Astro.url.searchParams.get('category') ?? 'all';
+
+const filtered = currentCategory === 'all'
+  ? posts
+  : posts.filter(p => p.category === currentCategory);
+
+const [featured, ...rest] = filtered;
+---
+
+<div class="site-container py-20">
+  <div class="flex flex-wrap gap-2 mb-14">
+    {categories.map(cat => {
+      const isActive = cat.id === currentCategory;
+      const href = cat.id === 'all' ? '/blog' : `/blog?category=${cat.id}`;
+      return (
+        <a
+          href={href}
+          class={`px-4 py-2 rounded-lg font-mono text-label-sm uppercase tracking-widest transition-all ${
+            isActive
+              ? 'bg-primary text-on-primary font-bold'
+              : 'bg-surface-container text-on-surface-variant hover:text-white ghost-border'
+          }`}
+        >
+          {cat.label}
+        </a>
+      );
+    })}
+  </div>
+
+  {featured ? (
+    <>
+      <div class="mb-8">
+        <BlogCardFeatured
+          slug={featured.slug}
+          title={featured.title}
+          description={featured.description}
+          pubDate={featured.pubDate}
+          image={featured.image}
+          category={featured.category}
+          readtime={featured.readtime}
+        />
+      </div>
+
+      {rest.length > 0 && (
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-16">
+          {rest.map(post => (
+            <BlogCard
+              slug={post.slug}
+              title={post.title}
+              description={post.description}
+              pubDate={post.pubDate}
+              image={post.image}
+              category={post.category}
+              readtime={post.readtime}
+            />
+          ))}
+        </div>
+      )}
+    </>
+  ) : (
+    <div class="py-24 text-center text-on-surface-muted">
+      <span class="material-symbols-outlined text-5xl mb-4 block opacity-30">search_off</span>
+      <p class="text-body-lg">No posts in this category yet.</p>
+    </div>
+  )}
+
+  {page.lastPage > 1 && (
+    <div class="flex items-center justify-center gap-4 mt-8">
+      {page.url.prev && (
+        <a href={page.url.prev} class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg ghost-border text-body-sm text-on-surface-variant hover:text-white transition-colors">
+          <span class="material-symbols-outlined text-sm">arrow_back</span>
+          Previous
+        </a>
+      )}
+      <span class="font-mono text-label-md text-on-surface-muted">
+        {page.currentPage} / {page.lastPage}
+      </span>
+      {page.url.next && (
+        <a href={page.url.next} class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg ghost-border text-body-sm text-on-surface-variant hover:text-white transition-colors">
+          Next
+          <span class="material-symbols-outlined text-sm">arrow_forward</span>
+        </a>
+      )}
+    </div>
+  )}
+</div>
