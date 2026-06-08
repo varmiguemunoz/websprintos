@@ -1,0 +1,76 @@
+---
+interface Props {
+  slug:        string;
+  title:       string;
+  description: string;
+  pubDate:     Date;
+  image?:      string;
+  category:    string;
+  readtime?:   string;
+}
+
+const { slug, title, description, pubDate, image, category, readtime } = Astro.props;
+
+const categoryLabels: Record<string, string> = {
+  'dev-tips':       'Dev Tips',
+  'automation':     'Automation',
+  'ai-tools':       'AI Tools',
+  'agency-workflow':'Agency Workflow',
+  'tech-stack':     'Tech Stack',
+  'others':         'Others',
+};
+
+const label = categoryLabels[category] ?? category;
+
+const formattedDate = pubDate.toLocaleDateString('en-US', {
+  month: 'short',
+  day:   'numeric',
+  year:  'numeric',
+});
+---
+
+<a href={`/blog/${slug}`} class="group block h-full">
+  <article class="feature-card h-full flex flex-col rounded-2xl bg-surface-low ghost-border overflow-hidden">
+    <div class="relative overflow-hidden shrink-0 h-44">
+      {image ? (
+        <img
+          src={image}
+          alt={title}
+          class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          loading="lazy"
+        />
+      ) : (
+        <div class="w-full h-full bg-surface-container flex items-center justify-center">
+          <span class="material-symbols-outlined text-4xl text-on-surface-muted opacity-30">article</span>
+        </div>
+      )}
+      <div class="absolute inset-0 bg-gradient-to-t from-surface-low/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+    </div>
+
+    <div class="flex flex-col flex-1 p-6 gap-4">
+      <div class="flex items-center justify-between gap-3">
+        <span class="font-mono text-label-sm uppercase tracking-widest text-primary">{label}</span>
+        <span class="font-mono text-label-sm text-on-surface-muted">{formattedDate}</span>
+      </div>
+
+      <div class="flex-1">
+        <h3 class="font-display text-headline-sm text-white mb-2 leading-snug group-hover:text-primary transition-colors duration-200 line-clamp-2">
+          {title}
+        </h3>
+        <p class="text-body-sm text-on-surface-variant leading-relaxed line-clamp-3">
+          {description}
+        </p>
+      </div>
+
+      <div class="flex items-center justify-between pt-2 border-t border-white/[0.04]">
+        {readtime && (
+          <span class="font-mono text-label-sm text-on-surface-muted">{readtime}</span>
+        )}
+        <span class="ml-auto flex items-center gap-1.5 text-body-sm font-semibold text-primary group-hover:gap-2.5 transition-all duration-200">
+          Read more
+          <span class="material-symbols-outlined text-sm leading-none">arrow_forward</span>
+        </span>
+      </div>
+    </div>
+  </article>
+</a>

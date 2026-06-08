@@ -1,0 +1,51 @@
+---
+import SectionLabel  from '@/components/atoms/SectionLabel.astro';
+import CommandSnippet from '@/components/molecules/CommandSnippet.astro';
+import ShortcutTable  from '@/components/molecules/ShortcutTable.astro';
+import type { CLISnippet, ShortcutGroup } from '@/data/cli';
+
+interface Props {
+  commands:   CLISnippet[];
+  shortcuts:  ShortcutGroup[];
+}
+
+const { commands, shortcuts } = Astro.props;
+---
+
+<section id="cli" class="py-32 bg-background">
+  <div class="site-container">
+    <div class="mb-16">
+      <SectionLabel label="CLI Reference" />
+      <h2 class="font-display text-display-md text-white mt-4 mb-4">
+        Everything from the Command Line
+      </h2>
+      <p class="text-body-lg text-on-surface-variant max-w-xl">
+        Composable commands designed for pipes, scripts, and automation workflows.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-24">
+      {commands.map(cmd => (
+        <CommandSnippet comment={cmd.comment} command={cmd.command} />
+      ))}
+    </div>
+
+    <div id="docs">
+      <div class="mb-12">
+        <SectionLabel label="Navigation Reference" accent="secondary" />
+        <h2 class="font-display text-display-md text-white mt-4 mb-4">
+          Keyboard-First, Always
+        </h2>
+        <p class="text-body-md text-on-surface-variant">
+          Learn the muscle memory of high-velocity development. Every screen has a hint bar at the bottom showing available shortcuts.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        {shortcuts.map(group => (
+          <ShortcutTable title={group.title} accent={group.accent} rows={group.rows} />
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

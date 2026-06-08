@@ -1,0 +1,44 @@
+---
+interface Props {
+  comment:  string;
+  command:  string;
+  multiline?: boolean;
+}
+
+const { comment, command, multiline = false } = Astro.props;
+
+const lines = command.split('\n');
+---
+
+<div class="bg-background rounded-xl border border-white/5 overflow-hidden group">
+  <div class="px-5 py-3 border-b border-white/5 flex items-center justify-between">
+    <span class="font-mono text-xs text-on-surface-muted italic">{comment}</span>
+    <button
+      data-copy={command}
+      class="copy-btn text-xs text-primary hover:text-primary-dim transition-colors font-medium"
+    >
+      Copy
+    </button>
+  </div>
+  <pre class="p-5 font-mono text-mono-md overflow-x-auto scrollbar-hide leading-relaxed">
+    {lines.map((line, i) => (
+      <code class="block">
+        {i === 0 && <span class="syntax-keyword">$ </span>}
+        {i > 0 && <span class="text-on-surface-muted">  </span>}
+        <span class="text-on-surface">{line}</span>
+      </code>
+    ))}
+  </pre>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const text = btn.dataset.copy ?? '';
+      await navigator.clipboard.writeText(text);
+      const orig = btn.textContent;
+      btn.textContent = 'Copied!';
+      setTimeout(() => { btn.textContent = orig; }, 2000);
+    });
+  });
+</script>

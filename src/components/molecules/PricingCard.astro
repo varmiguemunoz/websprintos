@@ -1,0 +1,52 @@
+---
+interface Props {
+  name:     string;
+  subtitle: string;
+  price:    string;
+  period:   string;
+  featured: boolean;
+  features: string[];
+  cta:      string;
+  ctaHref:  string;
+}
+
+const { name, subtitle, price, period, featured, features, cta, ctaHref } = Astro.props;
+---
+
+<article class={`relative flex flex-col rounded-3xl p-10 bg-surface-container ${featured ? 'border-2 border-primary shadow-nebula status-beam' : 'ghost-border'}`}>
+  {featured && (
+    <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 nebula-gradient px-4 py-1 rounded-full text-label-sm text-white font-bold tracking-widest uppercase">
+      Most Popular
+    </div>
+  )}
+
+  <div class="mb-8">
+    <h3 class="font-display text-headline-sm text-white mb-1">{name}</h3>
+    <p class="text-label-sm text-on-surface-muted uppercase tracking-widest">{subtitle}</p>
+  </div>
+
+  <div class="mb-8 flex items-baseline gap-2">
+    <span class="font-display text-[42px] font-bold leading-none text-white">{price}</span>
+    {period && <span class="text-body-sm text-on-surface-variant">/{period}</span>}
+  </div>
+
+  <ul class="space-y-3 mb-10 flex-1">
+    {features.map(feature => (
+      <li class="flex items-center gap-3 text-body-sm text-on-surface-variant">
+        <span class={`material-symbols-outlined text-sm shrink-0 ${featured ? 'text-primary' : 'text-secondary'}`}>check</span>
+        {feature}
+      </li>
+    ))}
+  </ul>
+
+  <a
+    href={ctaHref}
+    class={`w-full py-4 rounded-xl font-bold text-sm text-center transition-all ${
+      featured
+        ? 'nebula-gradient text-white hover:brightness-110 hover:scale-[1.02]'
+        : 'bg-transparent border border-white/10 text-white hover:bg-white/5'
+    }`}
+  >
+    {cta}
+  </a>
+</article>

@@ -1,0 +1,80 @@
+---
+import SectionLabel from '@/components/atoms/SectionLabel.astro';
+import type { githubContent, techStack } from '@/data/github';
+
+interface Props {
+  github: typeof githubContent;
+  stack:  typeof techStack;
+}
+
+const { github, stack } = Astro.props;
+---
+
+<section class="py-32 bg-surface">
+  <div class="site-container">
+    <div class="grid md:grid-cols-2 gap-20 items-center mb-32">
+      <div>
+        <SectionLabel label="GitHub Integration" />
+        <h2 class="font-display text-display-md text-white mt-4 mb-5">
+          {github.title}
+        </h2>
+        <p class="text-body-lg text-on-surface-variant mb-10">
+          {github.description}
+        </p>
+
+        <div class="space-y-8">
+          {github.features.map(f => (
+            <div class="flex gap-5">
+              <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                <span class="material-symbols-outlined text-lg">{f.icon}</span>
+              </div>
+              <div>
+                <span class="font-bold text-sm text-white block mb-1.5">{f.title}</span>
+                <p class="text-body-sm text-on-surface-variant leading-relaxed">{f.detail}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="bg-surface-container rounded-2xl ghost-border p-8">
+        <h4 class="text-label-sm text-on-surface-muted uppercase tracking-widest mb-6 font-mono">Webhook Event Mapping</h4>
+        <div class="space-y-4">
+          {github.webhookEvents.map(evt => (
+            <div class="bg-background rounded-lg px-5 py-3.5 flex items-center justify-between gap-4">
+              <code class="font-mono text-mono-sm text-on-surface-variant">{evt.trigger}</code>
+              <div class="flex items-center gap-3 shrink-0">
+                <div class="w-8 h-[1px] bg-primary/30 relative">
+                  <div class="absolute right-0 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-primary"></div>
+                </div>
+                <code class="font-mono text-mono-sm text-primary">{evt.action}</code>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div class="mt-6 pt-6 border-t border-white/[0.06]">
+          <p class="text-label-sm text-on-surface-muted uppercase tracking-widest mb-3 font-mono">Branch Convention</p>
+          <code class="font-mono text-mono-sm text-on-surface bg-background px-3 py-2 rounded block">
+            feat/<span class="text-primary">TSK-42</span>-add-rate-limiting
+          </code>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <SectionLabel label="Tech Stack" accent="secondary" />
+      <h2 class="font-display text-display-md text-white mt-4 mb-10">
+        Engineered for Reliability
+      </h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {stack.map(item => (
+          <div class="flex items-center gap-3 p-4 bg-surface-container rounded-xl ghost-border">
+            <span class={`w-2 h-2 rounded-full shrink-0 ${item.accent === 'secondary' ? 'bg-secondary' : 'bg-primary'}`}></span>
+            <span class="text-body-sm font-semibold text-on-surface">{item.name}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

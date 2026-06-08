@@ -1,0 +1,64 @@
+---
+import type { FooterGroup } from '@/data/footer';
+
+interface Props {
+  groups:    FooterGroup[];
+  meta:      { logo: string; name: string; tagline: string; copyright: string; github: string };
+}
+
+const { groups, meta } = Astro.props;
+---
+
+<footer class="bg-background border-t border-white/[0.04] py-20">
+  <div class="site-container">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+      <div class="md:col-span-1">
+        <div class="flex items-center gap-2.5 mb-4">
+          <span class="text-2xl">{meta.logo}</span>
+          <span class="font-display font-bold text-lg text-white">{meta.name}</span>
+        </div>
+        <p class="text-body-sm text-on-surface-variant mb-6 leading-relaxed max-w-xs">
+          {meta.tagline}
+        </p>
+        <a
+          href={meta.github}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 text-body-sm text-on-surface-variant hover:text-primary transition-colors"
+        >
+          <span class="material-symbols-outlined text-base">code</span>
+          GitHub
+        </a>
+      </div>
+
+      {groups.map(group => (
+        <div>
+          <h4 class="text-label-sm text-on-surface-muted uppercase tracking-widest mb-5 font-mono">
+            {group.title}
+          </h4>
+          <ul class="space-y-3">
+            {group.links.map(link => (
+              <li>
+                <a
+                  href={link.href}
+                  class="text-body-sm text-on-surface-variant hover:text-white transition-colors"
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+
+    <div class="border-t border-white/[0.04] pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+      <p class="text-body-sm text-on-surface-muted">{meta.copyright}</p>
+      <div class="flex items-center gap-6">
+        <a href="/privacy-policy" class="text-body-sm text-on-surface-muted hover:text-white transition-colors">Privacy</a>
+        <a href="/terms-and-conditions" class="text-body-sm text-on-surface-muted hover:text-white transition-colors">Terms</a>
+        <a href={meta.github} target="_blank" rel="noopener noreferrer" class="text-body-sm text-on-surface-muted hover:text-white transition-colors">License</a>
+      </div>
+    </div>
+  </div>
+</footer>

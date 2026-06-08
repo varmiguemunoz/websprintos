@@ -1,0 +1,77 @@
+---
+import { getCollection } from 'astro:content';
+import SectionLabel      from '@/components/atoms/SectionLabel.astro';
+import BlogCardFeatured  from '@/components/molecules/BlogCardFeatured.astro';
+import BlogCard          from '@/components/molecules/BlogCard.astro';
+
+const allPosts = await getCollection('blog');
+
+const sorted = allPosts
+  .filter(p => p.data?.draft !== true)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const [featured, ...rest] = sorted;
+const cards = rest.slice(0, 2);
+---
+
+{sorted.length > 0 && (
+  <section class="py-32 bg-surface">
+    <div class="site-container">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
+        <div>
+          <SectionLabel label="From the Blog" accent="secondary" />
+          <h2 class="font-display text-display-md text-white mt-4">
+            Technical Depth,<br />No Fluff.
+          </h2>
+        </div>
+        <a
+          href="/blog"
+          class="inline-flex items-center gap-2 text-body-sm font-semibold text-primary hover:text-primary-dim transition-colors shrink-0 self-end md:self-auto"
+        >
+          All articles
+          <span class="material-symbols-outlined text-sm">arrow_forward</span>
+        </a>
+      </div>
+
+      {featured && (
+        <div class="mb-8">
+          <BlogCardFeatured
+            slug={featured.slug}
+            title={featured.data.title}
+            description={featured.data.description}
+            pubDate={featured.data.pubDate}
+            image={featured.data.image}
+            category={featured.data.category}
+            readtime={featured.data.readtime}
+          />
+        </div>
+      )}
+
+      {cards.length > 0 && (
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-12">
+          {cards.map(post => (
+            <BlogCard
+              slug={post.slug}
+              title={post.data.title}
+              description={post.data.description}
+              pubDate={post.data.pubDate}
+              image={post.data.image}
+              category={post.data.category}
+              readtime={post.data.readtime}
+            />
+          ))}
+        </div>
+      )}
+
+      <div class="flex justify-center">
+        <a
+          href="/blog"
+          class="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-transparent border border-white/10 text-white font-semibold text-body-sm hover:bg-white/5 transition-all"
+        >
+          View all articles
+          <span class="material-symbols-outlined text-sm">arrow_forward</span>
+        </a>
+      </div>
+    </div>
+  </section>
+)}

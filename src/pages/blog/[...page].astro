@@ -2,55 +2,74 @@
 export const prerender = true;
 
 import { getCollection } from 'astro:content';
-
-import Base from '@layouts/Base.astro';
-
-import Navbar from '@/components/global/navbar';
-import DiscoveryCall from '@/components/global/discovery-call/discovery.astro';
-
-import config from '@config/config.json';
-import Provider from '@/components/global/blog/provider';
-
+import Base              from '@/layouts/Base.astro';
+import { Navbar }        from '@/components/organisms/Navbar';
+import BlogGrid          from '@/components/organisms/BlogGrid.astro';
+import SprintOSFooter    from '@/components/organisms/SprintOSFooter.astro';
+import SectionLabel      from '@/components/atoms/SectionLabel.astro';
+import { navigationItems, navCta, navPrimary } from '@/data/navigation';
+import { footerLinks, footerMeta }             from '@/data/footer';
 
 export async function getStaticPaths({ paginate }: any) {
   const allPosts = await getCollection('blog');
 
-  const sortedPosts = allPosts
-    .filter((post) => post.data?.draft !== true)
-    .sort((a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime());
+  const sorted = allPosts
+    .filter(p => p.data?.draft !== true)
+    .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
-  return paginate(sortedPosts, {
-    pageSize: config.site.pageSize || 6,
-  });
+  return paginate(sorted, { pageSize: 7 });
 }
 
 const { page } = Astro.props as any;
 
 const posts = (page?.data ?? []).map((p: any) => ({
-  slug: p.slug,
-  title: p.data.title,
+  slug:        p.slug,
+  title:       p.data.title,
   description: p.data.description,
-  pubDate: new Date(p.data.pubDate).toISOString(),
-  image: p.data.image ?? '',
-  category: p.data.category ?? 'others',
-  readtime: p.data.readtime ?? '',
+  pubDate:     new Date(p.data.pubDate),
+  image:       p.data.image ?? '',
+  category:    p.data.category ?? 'others',
+  readtime:    p.data.readtime ?? '',
 }));
 
 const categories = [
-  { id: 'all', label: 'All Posts', color: 'default' },
-  { id: 'dev-tips', label: 'Dev Tips', color: 'primary' },
-  { id: 'automation', label: 'Automation', color: 'accent' },
-  { id: 'ai-tools', label: 'AI Tools', color: 'secondary' },
-  { id: 'agency-workflow', label: 'Agency Workflow', color: 'primary' },
-  { id: 'tech-stack', label: 'Tech Stack', color: 'accent' },
+  { id: 'all',             label: 'All Posts' },
+  { id: 'dev-tips',        label: 'Dev Tips' },
+  { id: 'automation',      label: 'Automation' },
+  { id: 'ai-tools',        label: 'AI Tools' },
+  { id: 'agency-workflow', label: 'Agency Workflow' },
+  { id: 'tech-stack',      label: 'Tech Stack' },
 ];
 ---
 
-<Base meta_title="Agile Development for Agencies | Blog">
-  <div class="bg-gradient-backgrounded-full min-h-screen w-full">
-    <Navbar client:load />
+<Base
+  meta_title="Blog — SprintOS"
+  description="Technical breakdowns, architecture decisions, and deep dives on terminal-first developer tooling."
+>
+  <Navbar
+    client:load
+    items={navigationItems}
+    githubHref={navCta.href}
+    ctaLabel={navPrimary.label}
+    ctaHref={navPrimary.href}
+  />
 
-    <Provider posts={posts} categories={categories} client:load />
-    <DiscoveryCall />
+  <div class="pt-24 pb-6 bg-background relative overflow-hidden">
+    <div class="pointer-events-none absolute inset-0 nebula-glow-top opacity-40"></div>
+    <div class="site-container relative z-10">
+      <SectionLabel label="Blog" accent="secondary" />
+      <h1 class="font-display text-display-lg text-white mt-4 mb-4">
+        Technical Depth, No Fluff.
+      </h1>
+      <p class="text-body-lg text-on-surface-variant max-w-xl">
+        Architecture decisions, production patterns, and what actually ships in terminal-first developer tooling.
+      </p>
+    </div>
   </div>
+
+  <div class="bg-background min-h-screen">
+    <BlogGrid posts={posts} categories={categories} page={page} />
+  </div>
+
+  <SprintOSFooter groups={footerLinks} meta={footerMeta} />
 </Base>

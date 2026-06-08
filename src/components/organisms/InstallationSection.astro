@@ -1,0 +1,17 @@
+---
+import { InstallationTabs } from '@/components/molecules/InstallationTabs';
+import type { InstallTab }  from '@/data/installation';
+
+interface Props {
+  tabs:  InstallTab[];
+  steps: { step: string; title: string; body: string }[];
+}
+
+const { tabs, steps } = Astro.props;
+---
+
+<section id="install" class="py-32 bg-surface">
+  <div class="site-container max-w-4xl">
+    <InstallationTabs client:load tabs={tabs} steps={steps} />
+  </div>
+</section>

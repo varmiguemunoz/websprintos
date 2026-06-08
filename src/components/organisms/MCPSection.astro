@@ -1,0 +1,76 @@
+---
+import SectionLabel from '@/components/atoms/SectionLabel.astro';
+import type { MCPTool } from '@/data/mcp';
+
+interface Props {
+  tools:       MCPTool[];
+  prompts:     { icon: string; query: string; detail: string }[];
+  compatible:  string[];
+  setupCmd:    string;
+}
+
+const { tools, prompts, compatible, setupCmd } = Astro.props;
+---
+
+<section id="mcp" class="py-32 bg-background relative overflow-hidden">
+  <div class="pointer-events-none absolute inset-0 nebula-glow-center opacity-60"></div>
+
+  <div class="site-container relative z-10">
+    <div class="text-center mb-16 max-w-2xl mx-auto">
+      <SectionLabel label="AI & MCP" align="center" />
+      <h2 class="font-display text-display-md text-white mt-4 mb-4">
+        Let AI Operate Your Board
+      </h2>
+      <p class="text-body-lg text-on-surface-variant">
+        SprintOS ships a Model Context Protocol server. Claude, Cursor, and Windsurf can see your board and take actions with your permission.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20">
+      {prompts.map(p => (
+        <div class="p-7 bg-surface-low rounded-2xl ghost-border flex flex-col gap-4">
+          <span class="material-symbols-outlined text-primary text-2xl">{p.icon}</span>
+          <blockquote class="font-display text-headline-sm text-white">{p.query}</blockquote>
+          <p class="text-body-sm text-on-surface-variant leading-relaxed">{p.detail}</p>
+        </div>
+      ))}
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-12 items-start">
+      <div>
+        <h3 class="font-display text-headline-md text-white mb-6">Available MCP Tools</h3>
+        <div class="space-y-2">
+          {tools.map(tool => (
+            <div class="flex items-center gap-4 py-3 border-b border-white/[0.04]">
+              <code class="font-mono text-mono-sm text-primary w-44 shrink-0">{tool.name}</code>
+              <span class="text-body-sm text-on-surface-variant">{tool.description}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <h3 class="font-display text-headline-md text-white mb-6">Setup in 30 Seconds</h3>
+        <div class="bg-surface-container rounded-2xl ghost-border p-8 mb-6">
+          <p class="font-mono text-mono-sm text-on-surface-muted italic mb-3"># Start the MCP server</p>
+          <code class="font-mono text-body-md text-on-surface">
+            <span class="syntax-keyword">$</span> {setupCmd}
+          </code>
+          <p class="text-body-sm text-on-surface-muted mt-4">
+            Or run the guided setup from inside the TUI:<br />
+            <code class="text-on-surface-variant">Organization Settings → press 'm'</code>
+          </p>
+        </div>
+
+        <h4 class="text-label-sm text-on-surface-muted uppercase tracking-widest mb-4 font-mono">Works With</h4>
+        <div class="flex flex-wrap gap-3">
+          {compatible.map(tool => (
+            <span class="px-4 py-2 bg-surface-container rounded-lg ghost-border text-body-sm text-on-surface-variant font-medium">
+              {tool}
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

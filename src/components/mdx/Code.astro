@@ -1,25 +1,41 @@
 ---
-import CopyIcon from "@icons/CopyIcon.astro";
-import CheckIcon from "@icons/CheckIcon.astro";
+import CopyIcon  from '@icons/CopyIcon.astro';
+import CheckIcon from '@icons/CheckIcon.astro';
 ---
 
-<pre
-  class="gndx relative shadow-2xl bg-black code"><button aria-label="copy-button" class="copy-button absolute  z-20 top-2 right-2  rounded-md transition-all ease-in max-w-full max-h-fit hover:text-indigo-400"><CopyIcon /></button><span class="check-span absolute z-10 top-2 right-2  rounded-md transition-all ease-in opacity-0 text-green-300 max-w-full max-h-fit "><CheckIcon /></span><slot /></pre>
+<div class="relative group my-6">
+  <button
+    aria-label="Copy code"
+    class="copy-button absolute top-3 right-3 z-20 flex items-center gap-1.5 px-2.5 py-1.5 rounded-md bg-surface-muted border border-white/10 text-on-surface-muted hover:text-primary hover:border-primary/30 transition-all duration-150 opacity-0 group-hover:opacity-100 text-xs font-mono"
+  >
+    <span class="copy-label flex items-center gap-1.5">
+      <CopyIcon /> Copy
+    </span>
+    <span class="check-label hidden items-center gap-1.5 text-emerald">
+      <CheckIcon /> Copied
+    </span>
+  </button>
+
+  <pre class="terminal-window rounded-xl overflow-x-auto p-5 text-mono-sm leading-relaxed scrollbar-hide"><slot /></pre>
+</div>
 
 <script>
-  const codeBlock = document.querySelectorAll("pre");
+  document.querySelectorAll<HTMLElement>('.copy-button').forEach(btn => {
+    const copyLabel = btn.querySelector<HTMLElement>('.copy-label');
+    const checkLabel = btn.querySelector<HTMLElement>('.check-label');
 
-  codeBlock.forEach((code) => {
-    const button = code.querySelector(".copy-button");
-    const check = code.querySelector(".check-span");
+    btn.addEventListener('click', () => {
+      const pre = btn.closest('div')?.querySelector('pre');
+      navigator.clipboard.writeText(pre?.textContent?.trim() ?? '');
 
-    button!.addEventListener("click", () => {
-      navigator.clipboard.writeText(code.textContent?.trim() || "");
-      check?.classList.remove("opacity-0");
-      button?.classList.add("opacity-0");
+      copyLabel?.classList.add('hidden');
+      checkLabel?.classList.remove('hidden');
+      checkLabel?.classList.add('flex');
+
       setTimeout(() => {
-        check?.classList.add("opacity-0");
-        button?.classList.remove("opacity-0");
+        copyLabel?.classList.remove('hidden');
+        checkLabel?.classList.add('hidden');
+        checkLabel?.classList.remove('flex');
       }, 2000);
     });
   });

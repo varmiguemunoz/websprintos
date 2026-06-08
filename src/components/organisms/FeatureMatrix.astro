@@ -1,0 +1,39 @@
+---
+import SectionLabel from '@/components/atoms/SectionLabel.astro';
+import type { MatrixGroup } from '@/data/features';
+
+interface Props {
+  groups: MatrixGroup[];
+}
+
+const { groups } = Astro.props;
+---
+
+<section class="py-32 bg-background">
+  <div class="site-container">
+    <div class="mb-16">
+      <SectionLabel label="Full Feature Set" />
+      <h2 class="font-display text-display-md text-white mt-4">
+        Everything You Need, Nothing You Don't
+      </h2>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+      {groups.map(group => (
+        <div>
+          <h4 class={`font-mono text-label-sm uppercase tracking-widest mb-6 ${group.accent === 'secondary' ? 'text-secondary' : 'text-primary'}`}>
+            {group.category}
+          </h4>
+          <ul class="space-y-4">
+            {group.items.map(item => (
+              <li class="flex items-start gap-3 text-body-sm text-on-surface-variant group hover:text-on-surface transition-colors">
+                <span class="material-symbols-outlined text-secondary text-sm shrink-0 mt-0.5">check_circle</span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

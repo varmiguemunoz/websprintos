@@ -1,0 +1,77 @@
+---
+import SectionLabel  from '@/components/atoms/SectionLabel.astro';
+import EndpointRow   from '@/components/molecules/EndpointRow.astro';
+import type { ApiEndpoint } from '@/data/api';
+
+interface Props {
+  endpoints: ApiEndpoint[];
+  webhookPayload: string;
+  baseUrl: string;
+}
+
+const { endpoints, webhookPayload, baseUrl } = Astro.props;
+---
+
+<section id="api" class="py-32 bg-surface">
+  <div class="site-container">
+    <div class="grid md:grid-cols-2 gap-20">
+      <div>
+        <SectionLabel label="REST API" />
+        <h2 class="font-display text-display-md text-white mt-4 mb-4">
+          Scriptable by Design
+        </h2>
+        <p class="text-body-lg text-on-surface-variant mb-10">
+          A fully documented RESTful JSON API is built directly into the daemon. Extend SprintOS with your own scripts, Zapier flows, or internal tooling.
+        </p>
+        <p class="font-mono text-mono-sm text-on-surface-muted mb-8">
+          Base URL: <span class="text-primary">{baseUrl}</span>
+        </p>
+
+        <div class="space-y-2">
+          {endpoints.slice(0, 6).map(ep => (
+            <EndpointRow method={ep.method} path={ep.path} description={ep.description} />
+          ))}
+        </div>
+
+        <a
+          href="#"
+          class="inline-flex items-center gap-2 mt-6 text-primary text-body-sm hover:text-primary-dim transition-colors font-medium"
+        >
+          View full OpenAPI docs
+          <span class="material-symbols-outlined text-sm">arrow_forward</span>
+        </a>
+      </div>
+
+      <div>
+        <SectionLabel label="Webhooks" accent="secondary" />
+        <h2 class="font-display text-display-md text-white mt-4 mb-4">
+          Trigger Downstream Automation
+        </h2>
+        <p class="text-body-lg text-on-surface-variant mb-10">
+          Send notifications to Discord, Slack, or update your internal timesheets on task completion events.
+        </p>
+
+        <div class="bg-background rounded-xl border border-white/5 overflow-hidden mb-6">
+          <div class="px-5 py-3 border-b border-white/5">
+            <span class="font-mono text-xs text-on-surface-muted italic"># Webhook payload example</span>
+          </div>
+          <pre class="p-5 font-mono text-mono-sm leading-relaxed overflow-x-auto scrollbar-hide">{`{
+  `}<span class="syntax-keyword">"event"</span>{`:     `}<span class="syntax-string">"task.completed"</span>{`,
+  `}<span class="syntax-keyword">"timestamp"</span>{`: `}<span class="syntax-string">"2026-06-15T14:30:00Z"</span>{`,
+  `}<span class="syntax-keyword">"task_id"</span>{`:   `}<span class="syntax-number">42</span>{`,
+  `}<span class="syntax-keyword">"duration"</span>{`:  `}<span class="syntax-number">12400</span>{`
+}`}</pre>
+        </div>
+
+        <div class="space-y-3">
+          {['task.created', 'task.moved', 'task.completed', 'task.assigned', 'comment.created'].map(evt => (
+            <div class="flex items-center gap-3 text-body-sm text-on-surface-variant">
+              <span class="w-2 h-2 rounded-full bg-secondary shrink-0"></span>
+              <code class="font-mono text-mono-sm text-on-surface">{evt}</code>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

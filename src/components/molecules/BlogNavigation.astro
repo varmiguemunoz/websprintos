@@ -1,0 +1,47 @@
+---
+interface Post {
+  slug:  string;
+  data:  { title: string };
+}
+
+interface Props {
+  previousPost?: Post | null;
+  nextPost?:     Post | null;
+}
+
+const { previousPost, nextPost } = Astro.props;
+
+if (!previousPost && !nextPost) return;
+---
+
+<nav class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-16">
+  {previousPost ? (
+    <a
+      href={`/blog/${previousPost.slug}`}
+      class="group flex flex-col gap-2 p-6 rounded-2xl bg-surface-low ghost-border hover:border-primary/20 transition-all"
+    >
+      <span class="flex items-center gap-2 font-mono text-label-sm text-on-surface-muted uppercase tracking-widest">
+        <span class="material-symbols-outlined text-sm">arrow_back</span>
+        Previous
+      </span>
+      <span class="font-display text-headline-sm text-white group-hover:text-primary-dim transition-colors line-clamp-2">
+        {previousPost.data.title}
+      </span>
+    </a>
+  ) : <div />}
+
+  {nextPost && (
+    <a
+      href={`/blog/${nextPost.slug}`}
+      class="group flex flex-col gap-2 p-6 rounded-2xl bg-surface-low ghost-border hover:border-primary/20 transition-all text-right md:items-end"
+    >
+      <span class="flex items-center gap-2 font-mono text-label-sm text-on-surface-muted uppercase tracking-widest">
+        Next
+        <span class="material-symbols-outlined text-sm">arrow_forward</span>
+      </span>
+      <span class="font-display text-headline-sm text-white group-hover:text-primary-dim transition-colors line-clamp-2">
+        {nextPost.data.title}
+      </span>
+    </a>
+  )}
+</nav>

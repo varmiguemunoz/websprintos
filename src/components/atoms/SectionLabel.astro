@@ -1,0 +1,17 @@
+---
+interface Props {
+  label:   string;
+  accent?: 'primary' | 'secondary';
+  align?:  'left' | 'center';
+}
+
+const { label, accent = 'primary', align = 'left' } = Astro.props;
+
+const colorClass = accent === 'secondary'
+  ? 'text-secondary'
+  : 'text-primary';
+---
+
+<p class={`font-mono text-label-sm uppercase tracking-widest ${colorClass} ${align === 'center' ? 'text-center' : ''}`}>
+  {label}
+</p>

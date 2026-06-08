@@ -10,16 +10,8 @@ import vercel from '@astrojs/vercel';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://www.growthlyfast.com/',
+  site: 'https://sprintos.dev/',
   output: 'server',
-  i18n: {
-    defaultLocale: 'en',
-    locales: ['en', 'es'],
-    routing: {
-      prefixDefaultLocale: false,
-      redirectToDefaultLocale: false
-    }
-  },
   prefetch: {
     prefetchAll: true,
     defaultStrategy: 'viewport' // Prefetch cuando entra en viewport

@@ -1,117 +1,80 @@
 ---
-import Footer from '@components/global/footer/Footer.astro';
-import Whatsapp from '@/components/global/whatsapp/Whatsapp.astro';
-import GoogleCalendarButton from '@/components/global/google-calendar-button/google-calendar-button.astro';
-
-import { createOgImage } from '@utils/createOgImage';
-import { ViewTransitions } from 'astro:transitions';
-import Analytics from '@vercel/analytics/astro';
-
-import config from '@config/config.json';
+import Analytics    from '@vercel/analytics/astro';
 import SpeedInsights from '@vercel/speed-insights/astro';
-
+import { ViewTransitions } from 'astro:transitions';
 import '@styles/global.css';
 
 export interface Props {
-  title?: string;
-  meta_title?: string;
+  meta_title?:  string;
+  title?:       string;
   description?: string;
-  image?: string;
-  noindex?: boolean;
-  canonical?: string;
-  blogpost?: boolean;
-  keywords?: string;
-  schema?: object | object[];
-  ogImageTitle?: string;
-  ogImageMeta?: string;
-  hreflang?: Array<{ lang: string; url: string }>;
+  image?:       string;
+  noindex?:     boolean;
+  keywords?:    string;
+  schema?:      object | object[];
 }
 
-const { title, meta_title, description, noindex, keywords, schema, ogImageTitle, ogImageMeta, hreflang } = Astro.props;
+const {
+  title,
+  meta_title,
+  description = 'The terminal-first project manager for developer teams.',
+  noindex,
+  keywords,
+  schema,
+} = Astro.props;
 
-// OG Image dinámico por página
-const ogImage = createOgImage({
-  title: ogImageTitle || meta_title || title || 'GrowthlyFast - Monthly Dev Packs & Agency Development',
-  meta: ogImageMeta || description || 'Professional development services for agencies, startups, and contractors.',
-});
-
-// Canonical URL fix
-const canonicalURL = `${config.site.base_url}${Astro.url.pathname.replace(/\/$/, '')}`;
-
-const isPayment = Astro.url.pathname.startsWith('/payment');
-
-// Auto-noindex para payment y funnel pages
-const shouldNoindex = noindex || isPayment;
+const pageTitle    = meta_title ?? title ?? 'SprintOS';
+const canonicalURL = new URL(Astro.url.pathname, 'https://sprintos.dev').href;
+const ogImage      = 'https://sprintos.dev/og.png';
 ---
 
 <!doctype html>
-<html lang={config.site.lang}>
+<html lang="en" class="dark">
   <head>
-    <!-- Charset FIRST for security (OWASP best practice) -->
     <meta charset="utf-8" />
-
-    <!-- Resource hints - Optimized for critical resources -->
-    <link rel="preconnect" href="https://res.cloudinary.com" crossorigin />
-    <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-    <link rel="dns-prefetch" href="https://crm.growthlyfast.com" />
-
-    <!-- favicon -->
-    <link rel="shortcut icon" href={config.site.favicon} />
-
-    <!-- theme meta -->
-    <meta name="theme-name" content="growthlyfast" />
-    <meta name="msapplication-TileColor" content="#000000" />
-    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fff" />
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000" />
-    <meta name="generator" content={Astro.generator} />
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-
-    <!-- responsive meta -->
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
 
-    <title>{meta_title ? meta_title : title ? title : config.site.title}</title>
-    <meta name="title" content={meta_title ? meta_title : title ? title : config.site.title} />
-
-    <!-- Canonical fix -->
-    <link rel="canonical" href={canonicalURL} itemprop="url" />
-
-    <!-- Hreflang for multilingual support -->
-    {hreflang && hreflang.map((link) => <link rel="alternate" hreflang={link.lang} href={link.url} />)}
-
-    {shouldNoindex && <meta name="robots" content="noindex,nofollow" />}
-
-    <meta name="description" content={description ? description : config.metadata.meta_description} />
-
-    <!-- Keywords (opcional pero útil para contexto) -->
+    <title>{pageTitle}</title>
+    <meta name="title"       content={pageTitle} />
+    <meta name="description" content={description} />
     {keywords && <meta name="keywords" content={keywords} />}
+    <meta name="author"      content="varmiguemunoz" />
+    {noindex && <meta name="robots" content="noindex,nofollow" />}
 
-    <!-- author from config.json -->
-    <meta name="author" content={config.metadata.meta_author} />
+    <link rel="canonical" href={canonicalURL} />
+    <link rel="shortcut icon" href="/favicon.ico" />
 
-    <!-- Open Graph -->
-    <meta property="og:title" content={meta_title ? meta_title : title ? title : config.site.title} />
-    <meta property="og:description" content={description ? description : config.metadata.meta_description} />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content={canonicalURL} />
-    <meta property="og:image" content={ogImage} />
-    <meta property="og:site_name" content="GrowthlyFast" />
-    <meta property="og:locale" content="en_US" />
+    <meta property="og:type"        content="website" />
+    <meta property="og:url"         content={canonicalURL} />
+    <meta property="og:title"       content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image"       content={ogImage} />
 
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={meta_title ? meta_title : title ? title : config.site.title} />
-    <meta name="twitter:description" content={description ? description : config.metadata.meta_description} />
-    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:card"        content="summary_large_image" />
+    <meta name="twitter:title"       content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image"       content={ogImage} />
 
-    <!-- Schema.org JSON-LD -->
-    {
-      schema &&
-        (Array.isArray(schema) ? (
-          schema.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)
-        ) : (
-          <script type="application/ld+json" set:html={JSON.stringify(schema)} />
-        ))
-    }
+    <meta name="theme-color" content="#0e0e10" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&family=Inter:wght@300..700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+      rel="stylesheet"
+    />
+
+    {schema && (
+      Array.isArray(schema)
+        ? schema.map(s => <script type="application/ld+json" set:html={JSON.stringify(s)} />)
+        : <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+    )}
+
+    <slot name="head" />
 
     <ViewTransitions />
   </head>
@@ -119,15 +82,6 @@ const shouldNoindex = noindex || isPayment;
   <body>
     <Analytics />
     <SpeedInsights />
-
-    <main class="mx-auto w-full">
-      <slot />
-    </main>
-
-    <Whatsapp url="sms:+573023278057&body=Hi, I'm interested in your Services 🚀" />
-    <GoogleCalendarButton />
-
-    {!isPayment && <Footer />}
-
+    <slot />
   </body>
 </html>
