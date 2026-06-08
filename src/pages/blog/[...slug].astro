@@ -10,6 +10,7 @@ import SprintOSFooter   from '@/components/organisms/SprintOSFooter.astro';
 import Code             from '@components/mdx/Code.astro';
 import { navigationItems, navCta, navPrimary } from '@/data/navigation';
 import { footerLinks, footerMeta }             from '@/data/footer';
+import { schemaBlogPosting, schemaOrganization, categoryLabels } from '@/data/seo';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
@@ -35,12 +36,38 @@ type Props = CollectionEntry<'blog'> & {
 
 const post = Astro.props as any;
 const { Content } = await post.render();
+
+const postSchema = schemaBlogPosting({
+  title:       post.data.title,
+  description: post.data.description,
+  slug:        post.params?.slug ?? post.slug,
+  pubDate:     new Date(post.data.pubDate),
+  updatedDate: post.data.updatedDate ? new Date(post.data.updatedDate) : undefined,
+  image:       post.data.image,
+  category:    post.data.category ?? 'others',
+  tags:        post.data.tags,
+  authors:     post.data.authors,
+});
+
+const pageKeywords = [
+  ...(post.data.tags ?? []),
+  categoryLabels[post.data.category] ?? post.data.category,
+  'SprintOS blog',
+  'developer productivity',
+].join(', ');
 ---
 
 <Base
   meta_title={`${post.data.title} — SprintOS Blog`}
   description={post.data.description}
   image={post.data.image}
+  keywords={pageKeywords}
+  type="article"
+  pubDate={new Date(post.data.pubDate)}
+  updatedDate={post.data.updatedDate ? new Date(post.data.updatedDate) : undefined}
+  articleTags={post.data.tags}
+  articleAuthor={post.data.authors?.[0] ?? 'Miguel Angel Jaramillo Muñoz'}
+  schema={[postSchema, schemaOrganization()]}
 >
   <Navbar
     client:load
@@ -54,7 +81,7 @@ const { Content } = await post.render();
     <BlogPostHero
       title={post.data.title}
       description={post.data.description}
-      pubDate={post.data.pubDate}
+      pubDate={new Date(post.data.pubDate)}
       category={post.data.category}
       readtime={post.data.readtime}
       authors={post.data.authors}
@@ -66,8 +93,11 @@ const { Content } = await post.render();
           <img
             src={post.data.image}
             alt={post.data.title}
+            width="896"
+            height="390"
             class="w-full h-full object-cover"
             loading="eager"
+            fetchpriority="high"
           />
           <div class="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent" />
         </div>
@@ -75,17 +105,18 @@ const { Content } = await post.render();
     )}
 
     <div class="site-container max-w-4xl pb-24">
-      <article class="prose prose-invert prose-lg max-w-none
-        prose-headings:font-display prose-headings:tracking-tight prose-headings:text-white
-        prose-p:text-on-surface-variant prose-p:leading-relaxed
-        prose-a:text-primary prose-a:no-underline hover:prose-a:text-primary-dim
-        prose-code:text-secondary prose-code:font-mono prose-code:text-sm prose-code:bg-surface-container prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded
-        prose-pre:bg-transparent prose-pre:p-0 prose-pre:border-0
-        prose-blockquote:border-primary prose-blockquote:text-on-surface-variant
-        prose-strong:text-white prose-strong:font-semibold
-        prose-hr:border-white/[0.06]
-        mb-16 rounded-2xl bg-surface-low ghost-border p-8 md:p-12
-      ">
+      <article
+        class="prose prose-invert prose-lg max-w-none
+          prose-headings:font-display prose-headings:tracking-tight prose-headings:text-white
+          prose-p:text-on-surface-variant prose-p:leading-relaxed
+          prose-a:text-primary prose-a:no-underline hover:prose-a:text-primary-dim
+          prose-code:text-secondary prose-code:font-mono prose-code:text-sm prose-code:bg-surface-container prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded
+          prose-pre:bg-transparent prose-pre:p-0 prose-pre:border-0
+          prose-blockquote:border-primary prose-blockquote:text-on-surface-variant
+          prose-strong:text-white prose-strong:font-semibold
+          prose-hr:border-white/[0.06]
+          mb-16 rounded-2xl bg-surface-low ghost-border p-8 md:p-12"
+      >
         <Content components={{ pre: Code }} />
       </article>
 

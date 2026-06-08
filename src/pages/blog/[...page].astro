@@ -9,6 +9,7 @@ import SprintOSFooter    from '@/components/organisms/SprintOSFooter.astro';
 import SectionLabel      from '@/components/atoms/SectionLabel.astro';
 import { navigationItems, navCta, navPrimary } from '@/data/navigation';
 import { footerLinks, footerMeta }             from '@/data/footer';
+import { schemaBlogCollectionPage, schemaOrganization } from '@/data/seo';
 
 export async function getStaticPaths({ paginate }: any) {
   const allPosts = await getCollection('blog');
@@ -21,6 +22,7 @@ export async function getStaticPaths({ paginate }: any) {
 }
 
 const { page } = Astro.props as any;
+const pageNum  = page?.currentPage ?? 1;
 
 const posts = (page?.data ?? []).map((p: any) => ({
   slug:        p.slug,
@@ -40,11 +42,19 @@ const categories = [
   { id: 'agency-workflow', label: 'Agency Workflow' },
   { id: 'tech-stack',      label: 'Tech Stack' },
 ];
+
+const pageTitle = pageNum > 1
+  ? `Blog — Page ${pageNum} — SprintOS`
+  : 'Blog — SprintOS | Terminal Tooling, AI Agents & Developer Productivity';
+
+const canonicalPath = pageNum > 1 ? `/blog/${pageNum}` : '/blog';
 ---
 
 <Base
-  meta_title="Blog — SprintOS"
-  description="Technical breakdowns, architecture decisions, and deep dives on terminal-first developer tooling."
+  meta_title={pageTitle}
+  description="Technical deep-dives on terminal tooling, developer productivity, AI agents, MCP integrations, and production systems. No fluff — just what actually ships."
+  keywords="developer blog, terminal tooling, CLI productivity, MCP agents, sprint planning, golang backend, AI automation, developer productivity tips"
+  schema={[schemaBlogCollectionPage(pageNum), schemaOrganization()]}
 >
   <Navbar
     client:load

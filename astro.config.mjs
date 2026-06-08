@@ -1,137 +1,144 @@
 import { defineConfig } from 'astro/config';
-import mdx from '@astrojs/mdx';
-import tailwind from '@astrojs/tailwind';
-import Compress from 'astro-compress';
-import sitemap from '@astrojs/sitemap';
+import mdx       from '@astrojs/mdx';
+import tailwind  from '@astrojs/tailwind';
+import Compress  from 'astro-compress';
+import sitemap   from '@astrojs/sitemap';
 import robotsTxt from 'astro-robots-txt';
+import react     from '@astrojs/react';
+import vercel    from '@astrojs/vercel';
 
-import react from '@astrojs/react';
-import vercel from '@astrojs/vercel';
+const SITE_URL = 'https://sprintos.dev';
 
-// https://astro.build/config
 export default defineConfig({
-  site: 'https://sprintos.dev/',
+  site:   SITE_URL,
   output: 'server',
+
   prefetch: {
-    prefetchAll: true,
-    defaultStrategy: 'viewport' // Prefetch cuando entra en viewport
+    prefetchAll:     true,
+    defaultStrategy: 'viewport',
   },
+
   adapter: vercel({
-    webAnalytics: {
-      enabled: true
-    },
-    speedInsights: {
-      enabled: true
-    }
+    webAnalytics:  { enabled: true },
+    speedInsights: { enabled: true },
   }),
+
   image: {
     remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'res.cloudinary.com'
-      }
+      { protocol: 'https', hostname: 'res.cloudinary.com' },
     ],
-    service: {
-      entrypoint: 'astro/assets/services/sharp'
-    }
+    service: { entrypoint: 'astro/assets/services/sharp' },
   },
+
   markdown: {
-    drafts: true,
     shikiConfig: {
       theme: 'material-theme-palenight',
-      wrap: true,
+      wrap:  true,
     },
   },
+
   integrations: [
     mdx({
       syntaxHighlight: 'shiki',
       shikiConfig: {
         theme: 'material-theme-palenight',
-        wrap: true,
+        wrap:  true,
       },
-      drafts: true,
     }),
+
+    tailwind({ applyBaseStyles: false }),
+
+    react(),
+
     Compress({
-      CSS: true,
+      CSS:        true,
       HTML: {
         removeAttributeQuotes: false,
-        removeComments: true
+        removeComments:        true,
+        collapseWhitespace:    true,
       },
-      Image: false, // Ya lo hacemos con sharp
+      Image:      false,
       JavaScript: true,
-      SVG: true
+      SVG:        true,
     }),
+
     sitemap({
-      filter: (page) => {
-        // Excluir funnels y payment de sitemap
-        return !page.includes('/funnel/') &&
-               !page.includes('/payment/') &&
-               !page.includes('/thank-you/');
+      filter: page =>
+        !page.includes('/funnel/') &&
+        !page.includes('/payment/') &&
+        !page.includes('/thank-you/') &&
+        !page.includes('/api/'),
+      customPages: [
+        SITE_URL,
+        `${SITE_URL}/blog`,
+        `${SITE_URL}/privacy-policy`,
+        `${SITE_URL}/terms-and-conditions`,
+      ],
+      serialize(item) {
+        /* Homepage — highest priority */
+        if (item.url === `${SITE_URL}/`) {
+          return { ...item, priority: 1.0, changefreq: 'weekly' };
+        }
+        /* Blog listing */
+        if (item.url === `${SITE_URL}/blog` || item.url === `${SITE_URL}/blog/`) {
+          return { ...item, priority: 0.9, changefreq: 'daily' };
+        }
+        /* Individual blog posts */
+        if (item.url.includes('/blog/')) {
+          return { ...item, priority: 0.8, changefreq: 'monthly' };
+        }
+        /* Legal pages */
+        if (item.url.includes('/privacy') || item.url.includes('/terms')) {
+          return { ...item, priority: 0.2, changefreq: 'yearly' };
+        }
+        return { ...item, priority: 0.6, changefreq: 'monthly' };
       },
-      changefreq: 'weekly',
-      priority: 0.7,
-      lastmod: new Date()
+      lastmod: new Date(),
     }),
-    tailwind({
-      applyBaseStyles: false, // Ya tenemos global.css
-    }),
+
     robotsTxt({
       policy: [
         {
-          userAgent: '*',
-          allow: '/',
-          disallow: ['/funnel/', '/payment/', '/thank-you/', '/api/']
+          userAgent:  '*',
+          allow:      '/',
+          disallow:   ['/api/'],
+          crawlDelay: 0,
         },
         {
-          userAgent: 'Googlebot',
-          allow: '/',
-          disallow: ['/funnel/', '/payment/', '/api/'],
-          crawlDelay: 0
-        }
+          userAgent:  'Googlebot',
+          allow:      '/',
+          disallow:   ['/api/'],
+          crawlDelay: 0,
+        },
       ],
-      sitemap: 'https://www.growthlyfast.com/sitemap-index.xml'
+      /* ✅ Fixed: now points to the correct domain */
+      sitemap: `${SITE_URL}/sitemap-index.xml`,
     }),
-    react(),
   ],
+
   vite: {
     build: {
-      // Code splitting manual
       rollupOptions: {
         output: {
           manualChunks: {
-            // React core
+            /* Only packages that are actually used in the SprintOS site */
             'react-vendor': ['react', 'react-dom'],
-            // Three.js separado
-            'three-vendor': ['three', '@react-three/fiber', '@react-three/drei'],
-            // Radix UI separado
-            'radix-vendor': [
-              '@radix-ui/react-accordion',
-              '@radix-ui/react-dialog',
-              '@radix-ui/react-dropdown-menu',
-              '@radix-ui/react-popover',
-              '@radix-ui/react-select',
-              '@radix-ui/react-tabs'
-            ],
-            // Form libraries
-            'form-vendor': ['react-hook-form', '@hookform/resolvers', 'zod']
-          }
-        }
+          },
+        },
       },
-      // Minificación
-      minify: 'terser',
+      minify:            'terser',
       terserOptions: {
         compress: {
-          drop_console: true, // Remove console.logs en producción
-          drop_debugger: true
-        }
+          drop_console: true,
+          drop_debugger: true,
+          passes:       2,
+        },
+        format: { comments: false },
       },
-      // Chunk size warnings
-      chunkSizeWarningLimit: 500
+      chunkSizeWarningLimit: 500,
     },
-    // Optimización de dependencias
     optimizeDeps: {
       include: ['react', 'react-dom'],
-      exclude: ['three', '@react-three/fiber', '@react-three/drei']
-    }
-  }
+    },
+  },
 });

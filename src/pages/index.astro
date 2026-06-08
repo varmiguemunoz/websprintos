@@ -1,18 +1,18 @@
 ---
-import Base            from '@/layouts/Base.astro';
-import { Navbar }      from '@/components/organisms/Navbar';
-import HeroSection     from '@/components/organisms/HeroSection.astro';
-import FeatureGrid     from '@/components/organisms/FeatureGrid.astro';
-import FeatureMatrix   from '@/components/organisms/FeatureMatrix.astro';
+import Base              from '@/layouts/Base.astro';
+import { Navbar }        from '@/components/organisms/Navbar';
+import HeroSection       from '@/components/organisms/HeroSection.astro';
+import FeatureGrid       from '@/components/organisms/FeatureGrid.astro';
+import FeatureMatrix     from '@/components/organisms/FeatureMatrix.astro';
 import InstallationSection from '@/components/organisms/InstallationSection.astro';
 import CLIReferenceSection from '@/components/organisms/CLIReferenceSection.astro';
-import APISection      from '@/components/organisms/APISection.astro';
-import MCPSection      from '@/components/organisms/MCPSection.astro';
-import GitHubSection   from '@/components/organisms/GitHubSection.astro';
-import BlogPreview     from '@/components/organisms/BlogPreview.astro';
-import PricingSection  from '@/components/organisms/PricingSection.astro';
-import FinalCTA        from '@/components/organisms/FinalCTA.astro';
-import SprintOSFooter  from '@/components/organisms/SprintOSFooter.astro';
+import APISection        from '@/components/organisms/APISection.astro';
+import MCPSection        from '@/components/organisms/MCPSection.astro';
+import GitHubSection     from '@/components/organisms/GitHubSection.astro';
+import BlogPreview       from '@/components/organisms/BlogPreview.astro';
+import PricingSection    from '@/components/organisms/PricingSection.astro';
+import FinalCTA          from '@/components/organisms/FinalCTA.astro';
+import SprintOSFooter    from '@/components/organisms/SprintOSFooter.astro';
 
 import { navigationItems, navCta, navPrimary } from '@/data/navigation';
 import { heroContent, credibilityStats }        from '@/data/hero';
@@ -24,18 +24,48 @@ import { mcpTools, mcpPrompts, mcpCompatible, mcpSetupCommand } from '@/data/mcp
 import { githubContent, techStack }             from '@/data/github';
 import { pricingPlans }                         from '@/data/pricing';
 import { footerLinks, footerMeta }              from '@/data/footer';
+import {
+  SITE,
+  schemaOrganization,
+  schemaWebSite,
+  schemaSoftwareApplication,
+  schemaFAQ,
+} from '@/data/seo';
+
+const faqSchema = schemaFAQ([
+  {
+    question: 'What is SprintOS?',
+    answer: 'SprintOS is a terminal-first project manager for developer teams. It provides a fully keyboard-driven TUI kanban board, sprint planning, built-in time tracking, Pomodoro sessions, GitHub two-way sync, and an MCP server so AI agents like Claude can manage your board.',
+  },
+  {
+    question: 'How do I install SprintOS?',
+    answer: 'On macOS: brew install varmiguemunoz/sprintos/sprintos. On Linux: curl -fsSL https://raw.githubusercontent.com/varmiguemunoz/sprintos/main/install.sh | sh. On Windows: scoop install sprintos. Then run sprintos start to launch the TUI.',
+  },
+  {
+    question: 'Is SprintOS free?',
+    answer: 'Yes — SprintOS core is free and open source under the MIT license. A one-time $5 Supporter tier unlocks private cloud backup, real-time team presence, and unlimited AI agent tokens.',
+  },
+  {
+    question: 'Does SprintOS work with AI tools like Claude or Cursor?',
+    answer: 'Yes. SprintOS ships a built-in MCP (Model Context Protocol) server. Claude Desktop, Cursor, Windsurf, and Zed can connect to it and manage your board through natural language.',
+  },
+  {
+    question: 'What database does SprintOS use?',
+    answer: 'SprintOS uses PostgreSQL. You can self-host with any provider — Supabase, Neon, Railway, or your own server. Point DATABASE_URL to your instance and run sprintos start.',
+  },
+  {
+    question: 'Does SprintOS integrate with GitHub?',
+    answer: 'Yes. SprintOS has two-way GitHub sync. Opening a PR automatically moves the linked task to "In Review". Merging moves it to "Done". Just include the task ID (e.g. TSK-42) in your branch name or PR title.',
+  },
+]);
 ---
 
 <Base
   meta_title="SprintOS — The Developer Operating System"
   description="The terminal-first project manager for developer teams. Manage sprints, track time, and automate workflows from your terminal. AI-native, GitHub-connected, MCP ready."
+  keywords="terminal project manager, CLI kanban board, developer sprint planning, TUI task manager, MCP project management, go terminal app, keyboard driven project manager, sprintos"
+  schema={[schemaOrganization(), schemaWebSite(), schemaSoftwareApplication(), faqSchema]}
 >
-  <link
-    slot="head"
-    rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-  />
-
   <Navbar
     client:load
     items={navigationItems}
