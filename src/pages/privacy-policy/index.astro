@@ -4,6 +4,7 @@ import { Navbar }       from '@/components/organisms/Navbar';
 import SprintOSFooter   from '@/components/organisms/SprintOSFooter.astro';
 import { navigationItems, navCta, navPrimary } from '@/data/navigation';
 import { footerLinks, footerMeta }             from '@/data/footer';
+import { schemaWebPage, schemaOrganization, SITE } from '@/data/seo';
 
 const lastUpdated = 'June 7, 2026';
 const contactName  = 'Miguel Angel Jaramillo Muñoz';
@@ -13,6 +14,7 @@ const contactEmail = 'varmiguemunoz@gmail.com';
 <Base
   meta_title="Privacy Policy — SprintOS"
   description="How SprintOS collects, uses, and protects your data."
+  schema={[schemaWebPage({ name: 'Privacy Policy', description: 'How SprintOS collects, uses, and protects your data.', url: `${SITE.url}/privacy-policy` }), schemaOrganization()]}
 >
   <Navbar
     client:load

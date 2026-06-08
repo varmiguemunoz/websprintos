@@ -1,0 +1,395 @@
+---
+import Base           from '@/layouts/Base.astro';
+import { Navbar }     from '@/components/organisms/Navbar';
+import SprintOSFooter from '@/components/organisms/SprintOSFooter.astro';
+import SectionLabel   from '@/components/atoms/SectionLabel.astro';
+import { navigationItems, navCta, navPrimary } from '@/data/navigation';
+import { footerLinks, footerMeta }             from '@/data/footer';
+import { schemaOrganization, schemaBreadcrumb, schemaFAQ, SITE } from '@/data/seo';
+
+const breadcrumb = schemaBreadcrumb([
+  { name: 'Home',        url: SITE.url },
+  { name: 'Comparisons', url: `${SITE.url}/vs` },
+  { name: 'SprintOS vs Linear', url: `${SITE.url}/vs/linear` },
+]);
+
+const faq = schemaFAQ([
+  {
+    question: 'Is SprintOS a Linear alternative?',
+    answer: 'Yes. SprintOS covers the same core features as Linear — kanban boards, sprint planning, GitHub sync, team assignments, and velocity tracking — but runs entirely in your terminal with no browser required. It is also free and self-hosted.',
+  },
+  {
+    question: 'Does SprintOS have the same speed as Linear?',
+    answer: 'SprintOS is a compiled Go binary that runs natively in your terminal. There is no JavaScript rendering, no network latency for UI interactions, and no Electron overhead. For developers who live in the terminal, it is faster in practice.',
+  },
+  {
+    question: 'Can SprintOS replace Linear for a team?',
+    answer: 'Yes for engineering teams. SprintOS supports multiple members, board states, sprint planning, GitHub PR sync, time tracking, and AI agent integration. It does not have design or marketing-specific views that some Linear teams use.',
+  },
+  {
+    question: 'How much does SprintOS cost compared to Linear?',
+    answer: 'Linear costs $8–$16 per user per month. SprintOS core is free (MIT licensed) forever. A one-time $5 Supporter tier unlocks cloud backup and early access features — not per-user, not recurring.',
+  },
+  {
+    question: 'Does SprintOS have a CLI like Linear?',
+    answer: 'SprintOS is CLI-first by design. Every action available in the TUI is also available as a CLI command — task create, sprint start, report export, and more. Linear has basic CLI via community tools only.',
+  },
+]);
+
+const comparison = [
+  { feature: 'Terminal-native interface',          sprintos: true,  linear: false, note: 'Linear is browser + keyboard shortcuts only' },
+  { feature: 'CLI commands',                       sprintos: true,  linear: false, note: 'Linear has no official CLI' },
+  { feature: 'Kanban board',                       sprintos: true,  linear: true,  note: '' },
+  { feature: 'Sprint planning & velocity',         sprintos: true,  linear: true,  note: '' },
+  { feature: 'GitHub two-way sync',                sprintos: true,  linear: true,  note: 'Both auto-move tasks on PR events' },
+  { feature: 'Native MCP server',                  sprintos: true,  linear: false, note: 'Linear uses community-built MCP servers' },
+  { feature: 'AI agent (Claude / Cursor) control', sprintos: true,  linear: false, note: 'SprintOS ships a first-party MCP' },
+  { feature: 'Built-in time tracking',             sprintos: true,  linear: false, note: 'Linear requires external integrations' },
+  { feature: 'Pomodoro focus sessions',            sprintos: true,  linear: false, note: '' },
+  { feature: 'PDF executive reports',              sprintos: true,  linear: false, note: '' },
+  { feature: 'macOS menu bar app',                 sprintos: true,  linear: false, note: '' },
+  { feature: 'REST API',                           sprintos: true,  linear: true,  note: '' },
+  { feature: 'Webhook automation',                 sprintos: true,  linear: true,  note: '' },
+  { feature: 'Self-hosted',                        sprintos: true,  linear: false, note: 'Linear is cloud-only' },
+  { feature: 'Open source',                        sprintos: true,  linear: false, note: 'Linear is closed source' },
+  { feature: 'Free tier',                          sprintos: true,  linear: true,  note: 'Linear free tier is limited to 250 issues' },
+  { feature: 'Team size limit (free)',             sprintos: true,  linear: false, note: 'SprintOS has no team size limit' },
+  { feature: 'Figma / design integrations',        sprintos: false, linear: true,  note: 'Linear has deep design tool integrations' },
+  { feature: 'Customer support views',             sprintos: false, linear: true,  note: 'Linear has Triage and support workflows' },
+  { feature: 'Mobile app',                         sprintos: false, linear: true,  note: 'Linear has iOS and Android apps' },
+];
+
+const pricing = [
+  { tier: 'Free', sprintos: 'Unlimited forever', linear: 'Up to 250 issues, 1 active sprint' },
+  { tier: 'Team / Supporter', sprintos: '$5 one-time (per org)', linear: '$8/user/month' },
+  { tier: 'Business', sprintos: 'Not applicable', linear: '$16/user/month' },
+  { tier: 'Enterprise', sprintos: 'Contact for custom', linear: 'Custom pricing' },
+];
+---
+
+<Base
+  meta_title="SprintOS vs Linear — Terminal CLI Alternative for Developer Teams"
+  description="Linear is fast and beautiful but browser-only. SprintOS gives you the same sprint planning, GitHub sync, and velocity tracking — entirely from your terminal, self-hosted, and free. Full comparison."
+  keywords="sprintos vs linear, linear alternative terminal, linear CLI alternative, linear self-hosted alternative, terminal sprint planning, linear open source alternative, keyboard driven project manager"
+  schema={[schemaOrganization(), breadcrumb, faq]}
+>
+  <Navbar
+    client:load
+    items={navigationItems}
+    githubHref={navCta.href}
+    ctaLabel={navPrimary.label}
+    ctaHref={navPrimary.href}
+  />
+
+  <!-- Hero -->
+  <section class="relative pt-36 pb-20 overflow-hidden bg-background">
+    <div class="pointer-events-none absolute inset-0 nebula-glow-top opacity-60"></div>
+    <div class="site-container relative z-10 max-w-4xl">
+      <nav aria-label="Breadcrumb" class="flex items-center gap-2 font-mono text-label-sm text-on-surface-muted mb-8">
+        <a href="/" class="hover:text-white transition-colors">Home</a>
+        <span>/</span>
+        <a href="/vs" class="hover:text-white transition-colors">Compare</a>
+        <span>/</span>
+        <span class="text-primary">SprintOS vs Linear</span>
+      </nav>
+
+      <SectionLabel label="Comparison" />
+      <h1 class="font-display text-display-xl text-white mt-4 mb-6 text-balance">
+        SprintOS vs Linear
+      </h1>
+      <p class="text-body-lg text-on-surface-variant max-w-2xl mb-10 text-balance">
+        Linear is genuinely good — fast UI, great keyboard shortcuts, strong GitHub integration. But it still runs in a browser, costs $8+/user/month, is closed source, and has no native MCP server. SprintOS covers the same engineering PM workflow from your terminal, free, self-hosted, and with a first-party MCP server for Claude and Cursor.
+      </p>
+
+      <div class="flex flex-col sm:flex-row gap-4">
+        <a href="/#install" class="inline-flex items-center gap-2 nebula-gradient text-white font-bold px-8 py-4 rounded-xl hover:brightness-110 transition-all shadow-[0_16px_40px_rgba(183,159,255,0.25)]">
+          <span class="material-symbols-outlined">terminal</span>
+          Try SprintOS Free
+        </a>
+        <a href="#comparison" class="inline-flex items-center gap-2 bg-transparent border border-white/10 text-white font-semibold px-8 py-4 rounded-xl hover:bg-white/5 transition-all">
+          See Full Comparison
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick summary cards -->
+  <section class="py-20 bg-surface">
+    <div class="site-container max-w-4xl">
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="p-8 rounded-2xl bg-surface-low ghost-border status-beam">
+          <div class="flex items-center gap-3 mb-5">
+            <span class="font-mono text-label-sm text-primary uppercase tracking-widest">SprintOS</span>
+            <span class="px-2 py-0.5 rounded bg-primary/10 border border-primary/20 font-mono text-label-sm text-primary">Terminal-native · Free</span>
+          </div>
+          <ul class="space-y-3">
+            {[
+              'Fully keyboard-driven TUI — no browser',
+              'CLI commands for every action',
+              'Native MCP server for Claude & Cursor',
+              'Built-in time tracking + Pomodoro',
+              'Self-hosted on your own PostgreSQL',
+              'Free core forever, $5 one-time Supporter',
+            ].map(item => (
+              <li class="flex items-center gap-3 text-body-sm text-on-surface-variant">
+                <span class="material-symbols-outlined text-primary text-sm shrink-0">check_circle</span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div class="p-8 rounded-2xl bg-surface-low ghost-border">
+          <div class="flex items-center gap-3 mb-5">
+            <span class="font-mono text-label-sm text-on-surface-variant uppercase tracking-widest">Linear</span>
+            <span class="px-2 py-0.5 rounded bg-surface-muted font-mono text-label-sm text-on-surface-muted">Browser-based · $8/user/mo</span>
+          </div>
+          <ul class="space-y-3">
+            {[
+              'Sub-100ms browser UI, keyboard-first',
+              'Best-in-class design and UX polish',
+              'Strong GitHub and Figma integrations',
+              'Mobile apps (iOS / Android)',
+              'Customer support / Triage workflows',
+              'Large ecosystem of third-party integrations',
+            ].map(item => (
+              <li class="flex items-center gap-3 text-body-sm text-on-surface-variant">
+                <span class="material-symbols-outlined text-on-surface-muted text-sm shrink-0">check_circle</span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing comparison -->
+  <section class="py-20 bg-background">
+    <div class="site-container max-w-4xl">
+      <div class="mb-10">
+        <SectionLabel label="Pricing" />
+        <h2 class="font-display text-display-md text-white mt-4">The Cost Difference Is Significant</h2>
+        <p class="text-body-lg text-on-surface-variant mt-3 max-w-xl">
+          For a 5-person team, Linear costs $480–$960/year. SprintOS costs $5, once, per organization.
+        </p>
+      </div>
+
+      <div class="rounded-2xl ghost-border overflow-hidden">
+        <div class="grid grid-cols-3 bg-surface-container px-6 py-4 font-mono text-label-sm text-on-surface-muted uppercase tracking-widest">
+          <span>Tier</span>
+          <span class="text-center text-primary">SprintOS</span>
+          <span class="text-center">Linear</span>
+        </div>
+        {pricing.map((row, i) => (
+          <div class={`grid grid-cols-3 px-6 py-4 items-center border-t border-white/[0.04] ${i % 2 === 0 ? 'bg-surface-low' : 'bg-background'}`}>
+            <span class="text-body-sm text-on-surface font-medium">{row.tier}</span>
+            <span class="text-center text-body-sm text-primary font-semibold">{row.sprintos}</span>
+            <span class="text-center text-body-sm text-on-surface-muted">{row.linear}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Full comparison table -->
+  <section id="comparison" class="py-20 bg-surface">
+    <div class="site-container max-w-4xl">
+      <div class="mb-10">
+        <SectionLabel label="Feature Comparison" accent="secondary" />
+        <h2 class="font-display text-display-md text-white mt-4">Side by Side</h2>
+      </div>
+
+      <div class="rounded-2xl ghost-border overflow-hidden">
+        <div class="grid grid-cols-3 bg-surface-container px-6 py-4 font-mono text-label-sm text-on-surface-muted uppercase tracking-widest">
+          <span>Feature</span>
+          <span class="text-center text-primary">SprintOS</span>
+          <span class="text-center">Linear</span>
+        </div>
+        {comparison.map((row, i) => (
+          <div class={`grid grid-cols-3 px-6 py-4 items-start border-t border-white/[0.04] ${i % 2 === 0 ? 'bg-surface-low' : 'bg-background'}`}>
+            <div>
+              <span class="text-body-sm text-on-surface">{row.feature}</span>
+              {row.note && <p class="font-mono text-label-sm text-on-surface-muted mt-0.5">{row.note}</p>}
+            </div>
+            <div class="flex justify-center pt-0.5">
+              {row.sprintos
+                ? <span class="material-symbols-outlined text-secondary text-lg">check_circle</span>
+                : <span class="material-symbols-outlined text-on-surface-muted/30 text-lg">cancel</span>}
+            </div>
+            <div class="flex justify-center pt-0.5">
+              {row.linear
+                ? <span class="material-symbols-outlined text-on-surface-muted text-lg">check_circle</span>
+                : <span class="material-symbols-outlined text-on-surface-muted/30 text-lg">cancel</span>}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- The terminal argument -->
+  <section class="py-20 bg-background">
+    <div class="site-container max-w-4xl">
+      <div class="grid md:grid-cols-2 gap-12 items-start">
+        <div>
+          <SectionLabel label="The Core Difference" />
+          <h2 class="font-display text-display-md text-white mt-4 mb-6">
+            Linear Lives in Your Browser. SprintOS Lives in Your Editor.
+          </h2>
+          <p class="text-body-lg text-on-surface-variant mb-6 leading-relaxed">
+            Linear's keyboard shortcuts are excellent — but they only work in the browser tab. The moment you switch to your terminal to run tests, review a diff, or check a build, Linear is gone from your attention.
+          </p>
+          <p class="text-body-lg text-on-surface-variant leading-relaxed">
+            SprintOS runs in a terminal split pane next to your code. Press <kbd class="font-mono text-xs px-1.5 py-0.5 bg-surface-muted border border-white/10 rounded">T</kbd> to start a timer. Press <kbd class="font-mono text-xs px-1.5 py-0.5 bg-surface-muted border border-white/10 rounded">m</kbd> to move a task. Press <kbd class="font-mono text-xs px-1.5 py-0.5 bg-surface-muted border border-white/10 rounded">n</kbd> to create one. Never leave the terminal.
+          </p>
+        </div>
+        <div class="bg-surface-container rounded-2xl ghost-border p-8 font-mono text-mono-sm space-y-3">
+          <p class="text-on-surface-muted italic"># Your typical Linear workflow</p>
+          <p class="text-on-surface">1. Alt+Tab to Chrome</p>
+          <p class="text-on-surface">2. Find the Linear tab</p>
+          <p class="text-on-surface">3. Click the issue</p>
+          <p class="text-on-surface">4. Change status</p>
+          <p class="text-on-surface">5. Alt+Tab back to terminal</p>
+          <div class="border-t border-white/10 pt-3 mt-3">
+            <p class="text-on-surface-muted italic"># SprintOS workflow</p>
+            <p class="text-emerald">m → "In Review" → Enter</p>
+            <p class="text-on-surface-muted text-xs mt-1">Never left the terminal.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MCP differentiator -->
+  <section class="py-20 bg-surface">
+    <div class="site-container max-w-4xl">
+      <div class="p-10 rounded-2xl bg-surface-low ghost-border">
+        <div class="flex items-start gap-6 flex-col md:flex-row">
+          <div class="flex-1">
+            <SectionLabel label="The MCP Gap" accent="primary" />
+            <h3 class="font-display text-headline-lg text-white mt-3 mb-4">
+              Linear's MCP is Community-Built. SprintOS's Is Native.
+            </h3>
+            <p class="text-body-md text-on-surface-variant leading-relaxed mb-4">
+              Linear has community-created MCP servers — which means separate install, manual config, partial API coverage, and no guarantee it stays current. When the Linear API changes, the community MCP lags.
+            </p>
+            <p class="text-body-md text-on-surface-variant leading-relaxed">
+              SprintOS ships a native MCP server in the same binary. Run <code class="font-mono text-mono-sm text-primary bg-surface-container px-1.5 py-0.5 rounded">sprintos mcp</code>, and Claude or Cursor has full read/write access to your board — tasks, sprints, assignments, comments — all in one command.
+            </p>
+          </div>
+          <div class="shrink-0 flex flex-col gap-3 min-w-[200px]">
+            <a href="/mcp" class="inline-flex items-center justify-center gap-2 nebula-gradient text-white font-bold px-6 py-3 rounded-xl hover:brightness-110 transition-all text-body-sm">
+              <span class="material-symbols-outlined text-sm">smart_toy</span>
+              See MCP Docs
+            </a>
+            <a href="/blog/how-to-use-claude-to-manage-your-sprint" class="inline-flex items-center justify-center gap-2 bg-transparent border border-white/10 text-white font-semibold px-6 py-3 rounded-xl hover:bg-white/5 transition-all text-body-sm">
+              Claude Tutorial →
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- When to use each -->
+  <section class="py-20 bg-background">
+    <div class="site-container max-w-4xl">
+      <div class="mb-10">
+        <SectionLabel label="Honest Recommendation" accent="secondary" />
+        <h2 class="font-display text-display-md text-white mt-4">Which Should You Choose?</h2>
+      </div>
+      <div class="grid md:grid-cols-2 gap-8">
+        <div class="p-8 rounded-2xl bg-surface-low ghost-border">
+          <h3 class="font-display text-headline-md text-white mb-5">Use SprintOS if you...</h3>
+          <ul class="space-y-3">
+            {[
+              'Live in the terminal and hate browser context switches',
+              'Want self-hosted, data-sovereign project management',
+              'Use Claude, Cursor, or Windsurf for AI-assisted development',
+              'Need built-in time tracking for billing or capacity planning',
+              'Want to avoid per-seat SaaS costs as your team grows',
+              'Need PDF sprint reports for non-technical stakeholders',
+              'Are an open-source contributor or indie hacker',
+            ].map(item => (
+              <li class="flex items-start gap-3 text-body-sm text-on-surface-variant">
+                <span class="material-symbols-outlined text-primary text-sm shrink-0 mt-0.5">arrow_forward</span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div class="p-8 rounded-2xl bg-surface-low ghost-border">
+          <h3 class="font-display text-headline-md text-on-surface-variant mb-5">Consider Linear if you...</h3>
+          <ul class="space-y-3">
+            {[
+              'Have non-technical team members who need a polished web UI',
+              'Use Figma and need design-to-engineering workflow integrations',
+              'Rely on mobile apps to manage work on the go',
+              'Need customer support / triage workflows built in',
+              'Want a fully managed cloud solution with no infrastructure',
+              'Have a budget and want enterprise SSO and audit logs',
+            ].map(item => (
+              <li class="flex items-start gap-3 text-body-sm text-on-surface-muted">
+                <span class="material-symbols-outlined text-on-surface-muted text-sm shrink-0 mt-0.5">arrow_forward</span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="py-20 bg-surface">
+    <div class="site-container max-w-3xl">
+      <h2 class="font-display text-headline-lg text-white mb-8">Common Questions</h2>
+      <div class="space-y-4">
+        {[
+          { q: 'Is SprintOS a Linear alternative?', a: 'Yes. SprintOS covers the same core engineering PM features — kanban, sprints, GitHub sync, team assignments, velocity — but from the terminal, self-hosted, and free.' },
+          { q: 'How much cheaper is SprintOS than Linear?', a: 'For a 5-person team: Linear costs $480–$960 per year. SprintOS costs $5 once, per organization. That\'s a 96–99% cost reduction.' },
+          { q: 'Does SprintOS have Linear\'s keyboard shortcuts?', a: 'SprintOS is fully keyboard-driven with vim-style navigation (h/j/k/l). Every action has a shortcut. Press ? on any screen for the full help overlay.' },
+          { q: 'Can I migrate from Linear to SprintOS?', a: 'Linear exports issues as CSV or JSON. Use the SprintOS REST API to bulk-import tasks. GitHub integrations reconnect automatically via the webhook setup.' },
+          { q: 'Does SprintOS have Linear\'s design integrations?', a: 'Not currently. SprintOS is built for engineering workflows. Figma and design-specific integrations are not on the current roadmap.' },
+        ].map(item => (
+          <details class="group bg-surface-low ghost-border rounded-xl overflow-hidden">
+            <summary class="flex items-center justify-between px-6 py-5 cursor-pointer list-none font-display text-headline-sm text-white">
+              {item.q}
+              <span class="material-symbols-outlined text-on-surface-muted group-open:rotate-180 transition-transform duration-200">expand_more</span>
+            </summary>
+            <p class="px-6 pb-5 text-body-md text-on-surface-variant leading-relaxed">{item.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-20 bg-background">
+    <div class="site-container">
+      <div class="relative rounded-3xl p-16 text-center overflow-hidden bg-surface-container ghost-border">
+        <div class="pointer-events-none absolute inset-0 nebula-glow-top opacity-80"></div>
+        <div class="relative z-10 max-w-xl mx-auto">
+          <h2 class="font-display text-display-md text-white mb-4">Your Terminal. Your Board.</h2>
+          <p class="text-body-lg text-on-surface-variant mb-8">
+            One install. No browser. No per-seat pricing. Just ship.
+          </p>
+          <div class="flex flex-col sm:flex-row justify-center gap-4">
+            <a href="/#install" class="inline-flex items-center gap-2 nebula-gradient text-white font-bold px-8 py-4 rounded-xl hover:brightness-110 transition-all">
+              <span class="material-symbols-outlined">terminal</span>
+              Install SprintOS
+            </a>
+            <a href="https://github.com/varmiguemunoz/sprintos" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 bg-transparent border border-white/10 text-white font-semibold px-8 py-4 rounded-xl hover:bg-white/5 transition-all">
+              <span class="material-symbols-outlined">code</span>
+              View on GitHub
+            </a>
+          </div>
+          <p class="text-body-sm text-on-surface-muted mt-6">Free forever · MIT licensed · Self-hosted</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <SprintOSFooter groups={footerLinks} meta={footerMeta} />
+</Base>

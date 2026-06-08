@@ -165,6 +165,35 @@ export function schemaBlogCollectionPage(pageNum: number) {
   };
 }
 
+export function schemaBreadcrumb(crumbs: { name: string; url: string }[]) {
+  return {
+    '@context':        'https://schema.org',
+    '@type':           'BreadcrumbList',
+    itemListElement:   crumbs.map((crumb, i) => ({
+      '@type':    'ListItem',
+      position:   i + 1,
+      name:       crumb.name,
+      item:       crumb.url,
+    })),
+  };
+}
+
+export function schemaWebPage(props: { name: string; description: string; url: string }) {
+  return {
+    '@context':   'https://schema.org',
+    '@type':      'WebPage',
+    name:         props.name,
+    description:  props.description,
+    url:          props.url,
+    publisher: {
+      '@type': 'Organization',
+      name:    SITE.name,
+      url:     SITE.url,
+    },
+    inLanguage: 'en-US',
+  };
+}
+
 export function schemaFAQ(items: { question: string; answer: string }[]) {
   return {
     '@context':  'https://schema.org',

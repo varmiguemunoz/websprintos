@@ -1,0 +1,317 @@
+---
+import Base           from '@/layouts/Base.astro';
+import { Navbar }     from '@/components/organisms/Navbar';
+import SprintOSFooter from '@/components/organisms/SprintOSFooter.astro';
+import SectionLabel   from '@/components/atoms/SectionLabel.astro';
+import { navigationItems, navCta, navPrimary } from '@/data/navigation';
+import { footerLinks, footerMeta }             from '@/data/footer';
+import { schemaOrganization, schemaBreadcrumb, schemaFAQ, SITE } from '@/data/seo';
+
+const breadcrumb = schemaBreadcrumb([
+  { name: 'Home',         url: SITE.url },
+  { name: 'Comparisons',  url: `${SITE.url}/vs` },
+  { name: 'SprintOS vs Taskwarrior', url: `${SITE.url}/vs/taskwarrior` },
+]);
+
+const faq = schemaFAQ([
+  {
+    question: 'Is SprintOS a replacement for Taskwarrior?',
+    answer: 'SprintOS is purpose-built for developer teams — it adds sprint planning, team management, GitHub sync, and MCP support that Taskwarrior lacks. If you need personal-only task tracking, Taskwarrior is fine. If you work on a team and need sprints, time tracking, and AI integration, SprintOS is the better fit.',
+  },
+  {
+    question: 'Does SprintOS support vim keybindings like Taskwarrior?',
+    answer: 'Yes. SprintOS uses h/j/k/l navigation throughout the TUI, just like Taskwarrior-TUI. Every screen is keyboard-driven with a hint bar at the bottom.',
+  },
+  {
+    question: 'Can SprintOS import tasks from Taskwarrior?',
+    answer: 'SprintOS can import JSON-exported tasks. Use "taskwarrior export" to get a JSON file, then use the SprintOS REST API to bulk-import tasks into your board.',
+  },
+  {
+    question: 'Does SprintOS require a database server?',
+    answer: 'SprintOS uses PostgreSQL. You can connect to any hosted instance — Supabase and Neon both have generous free tiers. There is no local-only option, unlike Taskwarrior.',
+  },
+]);
+
+const comparison = [
+  { feature: 'Terminal-native TUI',            sprintos: true,  tw: true,  note: '' },
+  { feature: 'Team collaboration',             sprintos: true,  tw: false, note: 'Taskwarrior is single-user by design' },
+  { feature: 'Sprint planning',                sprintos: true,  tw: false, note: '' },
+  { feature: 'Kanban board',                   sprintos: true,  tw: false, note: 'TW has no board view' },
+  { feature: 'Built-in time tracking',         sprintos: true,  tw: false, note: '' },
+  { feature: 'Pomodoro timer',                 sprintos: true,  tw: false, note: '' },
+  { feature: 'GitHub two-way sync',            sprintos: true,  tw: false, note: '' },
+  { feature: 'MCP server (Claude / Cursor)',   sprintos: true,  tw: false, note: '' },
+  { feature: 'REST API',                       sprintos: true,  tw: false, note: '' },
+  { feature: 'PDF executive reports',          sprintos: true,  tw: false, note: '' },
+  { feature: 'macOS menu bar app',             sprintos: true,  tw: false, note: '' },
+  { feature: 'Vim-style navigation',           sprintos: true,  tw: true,  note: '' },
+  { feature: 'Open source',                    sprintos: true,  tw: true,  note: 'Both MIT licensed' },
+  { feature: 'Local-only / offline mode',      sprintos: false, tw: true,  note: 'SprintOS requires PostgreSQL' },
+  { feature: 'Recurring tasks',                sprintos: false, tw: true,  note: 'On SprintOS roadmap' },
+  { feature: 'Priority scores / urgency calc', sprintos: false, tw: true,  note: 'TW has sophisticated urgency system' },
+];
+---
+
+<Base
+  meta_title="SprintOS vs Taskwarrior — Terminal Project Manager Comparison"
+  description="Taskwarrior is great for personal task tracking. SprintOS adds team sprints, GitHub sync, time tracking, MCP support, and a kanban board — all from the terminal. See the full comparison."
+  keywords="sprintos vs taskwarrior, taskwarrior alternative, taskwarrior team features, terminal project manager comparison, taskwarrior sprint planning, taskwarrior kanban"
+  schema={[schemaOrganization(), breadcrumb, faq]}
+>
+  <Navbar
+    client:load
+    items={navigationItems}
+    githubHref={navCta.href}
+    ctaLabel={navPrimary.label}
+    ctaHref={navPrimary.href}
+  />
+
+  <!-- Hero -->
+  <section class="relative pt-36 pb-20 overflow-hidden bg-background">
+    <div class="pointer-events-none absolute inset-0 nebula-glow-top opacity-60"></div>
+    <div class="site-container relative z-10 max-w-4xl">
+      <nav aria-label="Breadcrumb" class="flex items-center gap-2 font-mono text-label-sm text-on-surface-muted mb-8">
+        <a href="/" class="hover:text-white transition-colors">Home</a>
+        <span>/</span>
+        <a href="/vs" class="hover:text-white transition-colors">Compare</a>
+        <span>/</span>
+        <span class="text-primary">SprintOS vs Taskwarrior</span>
+      </nav>
+
+      <SectionLabel label="Comparison" />
+      <h1 class="font-display text-display-xl text-white mt-4 mb-6 text-balance">
+        SprintOS vs Taskwarrior
+      </h1>
+      <p class="text-body-lg text-on-surface-variant max-w-2xl mb-10 text-balance">
+        Taskwarrior is the best personal terminal task manager ever built. But it was designed for one developer, not a team. SprintOS starts where Taskwarrior stops — adding sprints, collaboration, GitHub sync, time tracking, and AI integration, while keeping everything keyboard-driven and terminal-native.
+      </p>
+
+      <div class="flex flex-col sm:flex-row gap-4">
+        <a href="/#install" class="inline-flex items-center gap-2 nebula-gradient text-white font-bold px-8 py-4 rounded-xl hover:brightness-110 transition-all shadow-[0_16px_40px_rgba(183,159,255,0.25)]">
+          <span class="material-symbols-outlined">terminal</span>
+          Try SprintOS Free
+        </a>
+        <a href="#comparison" class="inline-flex items-center gap-2 bg-transparent border border-white/10 text-white font-semibold px-8 py-4 rounded-xl hover:bg-white/5 transition-all">
+          See Full Comparison
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick summary cards -->
+  <section class="py-20 bg-surface">
+    <div class="site-container max-w-4xl">
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="p-8 rounded-2xl bg-surface-low ghost-border status-beam">
+          <div class="flex items-center gap-3 mb-5">
+            <span class="font-mono text-label-sm text-primary uppercase tracking-widest">SprintOS</span>
+            <span class="px-2 py-0.5 rounded bg-primary/10 border border-primary/20 font-mono text-label-sm text-primary">Recommended for teams</span>
+          </div>
+          <ul class="space-y-3">
+            {[
+              'Team kanban with sprint planning',
+              'GitHub PR → task state automation',
+              'Built-in time tracking + Pomodoro',
+              'MCP server for Claude & Cursor',
+              'REST API + webhook automation',
+              'PDF reports for stakeholders',
+            ].map(item => (
+              <li class="flex items-center gap-3 text-body-sm text-on-surface-variant">
+                <span class="material-symbols-outlined text-primary text-sm shrink-0">check_circle</span>
+                {item}
+              </li>
+            ))}
+          </ul>
+          <p class="text-label-sm text-on-surface-muted mt-6 font-mono">Free (MIT) · $5 one-time Supporter tier</p>
+        </div>
+
+        <div class="p-8 rounded-2xl bg-surface-low ghost-border">
+          <div class="flex items-center gap-3 mb-5">
+            <span class="font-mono text-label-sm text-on-surface-variant uppercase tracking-widest">Taskwarrior</span>
+            <span class="px-2 py-0.5 rounded bg-surface-muted font-mono text-label-sm text-on-surface-muted">Best for personal use</span>
+          </div>
+          <ul class="space-y-3">
+            {[
+              'Sophisticated personal task tracking',
+              'Urgency scoring & priority math',
+              'Recurring tasks & annotations',
+              'Offline-first, local storage',
+              'Massive ecosystem of plugins',
+              'Taskwarrior-TUI for visual interface',
+            ].map(item => (
+              <li class="flex items-center gap-3 text-body-sm text-on-surface-variant">
+                <span class="material-symbols-outlined text-on-surface-muted text-sm shrink-0">check_circle</span>
+                {item}
+              </li>
+            ))}
+          </ul>
+          <p class="text-label-sm text-on-surface-muted mt-6 font-mono">Free (MIT)</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Full comparison table -->
+  <section id="comparison" class="py-24 bg-background">
+    <div class="site-container max-w-4xl">
+      <div class="mb-12">
+        <SectionLabel label="Feature Comparison" />
+        <h2 class="font-display text-display-md text-white mt-4">Side by Side</h2>
+      </div>
+
+      <div class="rounded-2xl ghost-border overflow-hidden">
+        <div class="grid grid-cols-3 bg-surface-container px-6 py-4 font-mono text-label-sm text-on-surface-muted uppercase tracking-widest">
+          <span>Feature</span>
+          <span class="text-center text-primary">SprintOS</span>
+          <span class="text-center">Taskwarrior</span>
+        </div>
+
+        {comparison.map((row, i) => (
+          <div class={`grid grid-cols-3 px-6 py-4 items-center ${i % 2 === 0 ? 'bg-surface-low' : 'bg-background'} border-t border-white/[0.04]`}>
+            <div>
+              <span class="text-body-sm text-on-surface">{row.feature}</span>
+              {row.note && <p class="font-mono text-label-sm text-on-surface-muted mt-0.5">{row.note}</p>}
+            </div>
+            <div class="flex justify-center">
+              {row.sprintos
+                ? <span class="material-symbols-outlined text-secondary text-lg">check_circle</span>
+                : <span class="material-symbols-outlined text-on-surface-muted/30 text-lg">cancel</span>}
+            </div>
+            <div class="flex justify-center">
+              {row.tw
+                ? <span class="material-symbols-outlined text-on-surface-muted text-lg">check_circle</span>
+                : <span class="material-symbols-outlined text-on-surface-muted/30 text-lg">cancel</span>}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- When to use each -->
+  <section class="py-24 bg-surface">
+    <div class="site-container max-w-4xl">
+      <div class="mb-12">
+        <SectionLabel label="Which Should You Use?" accent="secondary" />
+        <h2 class="font-display text-display-md text-white mt-4">Honest Recommendation</h2>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-8">
+        <div class="p-8 rounded-2xl bg-surface-low ghost-border">
+          <h3 class="font-display text-headline-md text-white mb-5">Use SprintOS if you...</h3>
+          <ul class="space-y-4">
+            {[
+              'Work with a team of 2 or more developers',
+              'Run agile sprints and need velocity tracking',
+              'Want GitHub PRs to move tasks automatically',
+              'Use Claude, Cursor, or another AI coding tool',
+              'Need time tracking for billing or capacity planning',
+              'Want to generate PDF reports for stakeholders',
+              'Are migrating away from Jira or Linear',
+            ].map(item => (
+              <li class="flex items-start gap-3 text-body-sm text-on-surface-variant">
+                <span class="material-symbols-outlined text-primary text-sm shrink-0 mt-0.5">arrow_forward</span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div class="p-8 rounded-2xl bg-surface-low ghost-border">
+          <h3 class="font-display text-headline-md text-on-surface-variant mb-5">Stick with Taskwarrior if you...</h3>
+          <ul class="space-y-4">
+            {[
+              'Work alone and need personal task tracking only',
+              'Need recurring tasks and annotations',
+              'Require fully offline, local-only storage',
+              'Love Taskwarrior\'s urgency scoring system',
+              'Are already deeply invested in the TW ecosystem',
+              'Don\'t need team collaboration features',
+            ].map(item => (
+              <li class="flex items-start gap-3 text-body-sm text-on-surface-muted">
+                <span class="material-symbols-outlined text-on-surface-muted text-sm shrink-0 mt-0.5">arrow_forward</span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Migration note -->
+  <section class="py-20 bg-background">
+    <div class="site-container max-w-3xl">
+      <div class="p-10 rounded-2xl bg-surface-low ghost-border">
+        <h3 class="font-display text-headline-md text-white mb-4">Migrating from Taskwarrior?</h3>
+        <p class="text-body-md text-on-surface-variant leading-relaxed mb-6">
+          Export your tasks from Taskwarrior as JSON and import them into SprintOS via the REST API. Your task titles, priorities, and due dates carry over. Tags map to SprintOS labels.
+        </p>
+        <div class="bg-background rounded-xl border border-white/5 overflow-hidden">
+          <div class="px-5 py-3 border-b border-white/5">
+            <span class="font-mono text-xs text-on-surface-muted italic"># Export from Taskwarrior, import to SprintOS</span>
+          </div>
+          <pre class="p-5 font-mono text-mono-sm leading-relaxed">{`task export > tasks.json
+
+curl -X POST \\
+  -H `}<span class="syntax-string">"Authorization: Bearer $TOKEN"</span>{` \\
+  -H `}<span class="syntax-string">"Content-Type: application/json"</span>{` \\
+  -d @tasks.json \\
+  http://localhost:8090/api/tasks/import`}</pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="py-20 bg-surface">
+    <div class="site-container max-w-3xl">
+      <h2 class="font-display text-headline-lg text-white mb-8">Common Questions</h2>
+      <div class="space-y-4">
+        {[
+          { q: 'Is SprintOS a replacement for Taskwarrior?', a: 'SprintOS is purpose-built for developer teams — it adds sprint planning, team management, GitHub sync, and MCP support that Taskwarrior lacks. If you need personal-only task tracking, Taskwarrior is fine. If you work on a team and need sprints, time tracking, and AI integration, SprintOS is the better fit.' },
+          { q: 'Does SprintOS support vim keybindings?', a: 'Yes. SprintOS uses h/j/k/l navigation throughout the TUI, just like Taskwarrior-TUI. Every screen is keyboard-driven with a hint bar at the bottom showing available shortcuts.' },
+          { q: 'Does SprintOS work offline?', a: 'SprintOS requires a PostgreSQL connection. Supabase and Neon have free hosted tiers that work great. Fully local/offline mode is not currently supported.' },
+          { q: 'Can I use both tools?', a: 'Yes. Many developers use Taskwarrior for personal inbox-style task capture and SprintOS for team sprint management. They serve different workflows and don\'t conflict.' },
+        ].map(item => (
+          <details class="group bg-surface-low ghost-border rounded-xl overflow-hidden">
+            <summary class="flex items-center justify-between px-6 py-5 cursor-pointer list-none font-display text-headline-sm text-white">
+              {item.q}
+              <span class="material-symbols-outlined text-on-surface-muted group-open:rotate-180 transition-transform duration-200">expand_more</span>
+            </summary>
+            <p class="px-6 pb-5 text-body-md text-on-surface-variant leading-relaxed">{item.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-20 bg-background">
+    <div class="site-container">
+      <div class="relative rounded-3xl p-16 text-center overflow-hidden bg-surface-container ghost-border">
+        <div class="pointer-events-none absolute inset-0 nebula-glow-top opacity-80"></div>
+        <div class="relative z-10 max-w-xl mx-auto">
+          <h2 class="font-display text-display-md text-white mb-4">
+            Ready to Upgrade?
+          </h2>
+          <p class="text-body-lg text-on-surface-variant mb-8">
+            One command to install. Five minutes to set up your first sprint. No browser required.
+          </p>
+          <div class="flex flex-col sm:flex-row justify-center gap-4">
+            <a href="/#install" class="inline-flex items-center gap-2 nebula-gradient text-white font-bold px-8 py-4 rounded-xl hover:brightness-110 transition-all">
+              <span class="material-symbols-outlined">terminal</span>
+              Install SprintOS
+            </a>
+            <a href="/blog/how-to-use-claude-to-manage-your-sprint" class="inline-flex items-center gap-2 bg-transparent border border-white/10 text-white font-semibold px-8 py-4 rounded-xl hover:bg-white/5 transition-all">
+              See MCP in Action →
+            </a>
+          </div>
+          <p class="text-body-sm text-on-surface-muted mt-6">Free forever · MIT licensed · No credit card</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <SprintOSFooter groups={footerLinks} meta={footerMeta} />
+</Base>

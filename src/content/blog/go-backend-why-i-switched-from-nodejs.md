@@ -142,3 +142,7 @@ Go didn't replace Node.js in my stack — it replaced the parts of Node.js that 
 If your backend is hitting latency walls or you're scaling horizontally just to compensate for single-thread limits, Go is worth the learning curve. It paid for itself in the first month of reduced infrastructure spend.
 
 Questions? [Let's talk](https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ3T7zeEOYTFQmof-sbNifFo37K0uW123TO1tf3L6AEUr-2qhDbR8Txol7-9zoAdi6NfmfNTOtQs).
+
+---
+
+*If you're building in Go and want to go deeper: [Building a TUI in Go with Bubble Tea — what I learned building SprintOS →](/blog/building-tui-go-bubble-tea-sprintos)*

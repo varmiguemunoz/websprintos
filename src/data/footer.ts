@@ -19,19 +19,27 @@ export const footerLinks: FooterGroup[] = [
   {
     title: 'Documentation',
     links: [
-      { label: 'Quick Start', href: '#install' },
-      { label: 'CLI Reference', href: '#cli' },
-      { label: 'REST API', href: '#api' },
-      { label: 'MCP Server', href: '#mcp' },
+      { label: 'Quick Start',    href: '#install' },
+      { label: 'CLI Reference',  href: '#cli' },
+      { label: 'REST API',       href: '#api' },
+      { label: 'MCP Server',     href: '/mcp' },
+      { label: 'Self-Hosting',   href: '/blog/self-hosting-sprintos-postgresql' },
+    ],
+  },
+  {
+    title: 'Compare',
+    links: [
+      { label: 'vs Linear',      href: '/vs/linear' },
+      { label: 'vs Taskwarrior', href: '/vs/taskwarrior' },
     ],
   },
   {
     title: 'Blog',
     links: [
       { label: 'All Articles', href: '/blog' },
-      { label: 'Dev Tips', href: '/blog?category=dev-tips' },
-      { label: 'AI Tools', href: '/blog?category=ai-tools' },
-      { label: 'Automation', href: '/blog?category=automation' },
+      { label: 'Dev Tips',     href: '/blog?category=dev-tips' },
+      { label: 'AI Tools',     href: '/blog?category=ai-tools' },
+      { label: 'Automation',   href: '/blog?category=automation' },
     ],
   },
 ];

@@ -185,3 +185,7 @@ Would I use Rust for a client project? Depends on the requirements:
 The language is genuinely excellent. The learning curve is genuinely steep. Both things are true simultaneously.
 
 If you're curious about where Rust fits in your architecture, [let's talk](https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ3T7zeEOYTFQmof-sbNifFo37K0uW123TO1tf3L6AEUr-2qhDbR8Txol7-9zoAdi6NfmfNTOtQs).
+
+---
+
+*Choosing between backend languages for a new project? [Why I switched from Node to Go for SprintOS →](/blog/go-backend-why-i-switched-from-nodejs)*

@@ -36,6 +36,7 @@ const formattedDate = pubDate.toLocaleDateString('en-US', {
         <img
           src={image}
           alt={title}
+          alt={`Cover image for: ${title}`}
           class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 absolute inset-0"
           loading="lazy"
         />

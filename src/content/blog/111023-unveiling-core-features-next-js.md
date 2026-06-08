@@ -7,7 +7,7 @@ readtime: '5 min read'
 category: 'tech-stack'
 tags: ['Javascript', 'Frontend', 'React js', 'Next js']
 authors: ['varmiguemunoz']
-draft: false
+draft: true
 ---
 
 **Unveiling the Core Features of Next.js: Powering Reactive Developments**

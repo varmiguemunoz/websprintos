@@ -1,0 +1,24 @@
+{
+  "social_links": [
+    {
+      "label": "GitHub",
+      "icon": "Github",
+      "url": "https://github.com/varmiguemunoz"
+    },
+    {
+      "label": "LinkedIn",
+      "icon": "Linkedin",
+      "url": "https://linkedin.com/in/varmiguemunoz"
+    },
+    {
+      "label": "Email",
+      "icon": "Mail",
+      "url": "mailto:maallinc05@gmail.com"
+    },
+    {
+      "label": "Blog",
+      "icon": "BookOpen",
+      "url": "/blog"
+    }
+  ]
+}

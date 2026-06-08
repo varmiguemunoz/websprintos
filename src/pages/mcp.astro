@@ -1,0 +1,429 @@
+---
+import Base           from '@/layouts/Base.astro';
+import { Navbar }     from '@/components/organisms/Navbar';
+import SprintOSFooter from '@/components/organisms/SprintOSFooter.astro';
+import SectionLabel   from '@/components/atoms/SectionLabel.astro';
+import { navigationItems, navCta, navPrimary } from '@/data/navigation';
+import { footerLinks, footerMeta }             from '@/data/footer';
+import { mcpTools, mcpCompatible }             from '@/data/mcp';
+import {
+  schemaOrganization,
+  schemaSoftwareApplication,
+  schemaBreadcrumb,
+  schemaFAQ,
+  SITE,
+} from '@/data/seo';
+
+const breadcrumb = schemaBreadcrumb([
+  { name: 'Home', url: SITE.url },
+  { name: 'MCP Server', url: `${SITE.url}/mcp` },
+]);
+
+const faq = schemaFAQ([
+  {
+    question: 'What is the SprintOS MCP server?',
+    answer: 'SprintOS ships a built-in Model Context Protocol (MCP) server that lets AI agents like Claude, Cursor, and Windsurf read and manage your project board through natural language. No external plugins or community servers required.',
+  },
+  {
+    question: 'How do I connect Claude to SprintOS?',
+    answer: 'Run "sprintos mcp" to start the MCP server. Then run the guided setup from Organization Settings inside the TUI (press m). SprintOS auto-writes the config for Claude Desktop, Cursor, Windsurf, and Zed. Restart your AI tool to activate.',
+  },
+  {
+    question: 'What can Claude do with SprintOS?',
+    answer: 'Claude can create tasks, generate full sprints from a PRD, move tasks between states, assign team members, add comments, list overdue work, summarize project health, and analyze velocity trends — all through natural language.',
+  },
+  {
+    question: 'Does SprintOS MCP work with Cursor?',
+    answer: 'Yes. SprintOS auto-detects Cursor and writes the config to ~/.cursor/mcp.json. Restart Cursor after setup.',
+  },
+  {
+    question: 'Is the MCP server free?',
+    answer: 'Yes. The MCP server is included in the free MIT-licensed core. No API key or subscription required.',
+  },
+]);
+
+const examplePrompts = [
+  {
+    icon: 'architecture',
+    prompt: '"Generate a sprint for this PRD"',
+    detail: 'Paste any product requirements doc. Claude creates tasks, assigns story points, and structures a complete sprint in seconds.',
+  },
+  {
+    icon: 'query_stats',
+    prompt: '"Which tasks are stale for 5+ days?"',
+    detail: 'Claude scans your entire board, surfaces stuck work items, and suggests the next action for each — without you leaving your editor.',
+  },
+  {
+    icon: 'group',
+    prompt: '"Assign the auth tasks to Miguel"',
+    detail: 'Natural-language team management. Claude maps names to team members, assigns tasks, and confirms the changes.',
+  },
+  {
+    icon: 'summarize',
+    prompt: '"Summarize yesterday\'s progress"',
+    detail: 'Claude reads completed tasks, running timers, and comments to write your standup update automatically.',
+  },
+  {
+    icon: 'auto_fix',
+    prompt: '"Rebalance the sprint — we\'re overloaded"',
+    detail: 'Claude analyzes assignee workloads and moves tasks to the backlog or redistributes them across the team.',
+  },
+  {
+    icon: 'rocket_launch',
+    prompt: '"Create 10 tasks for the auth module"',
+    detail: 'Describe a feature in plain English. Claude breaks it into atomic tasks, sets priorities, and adds them to your backlog.',
+  },
+];
+
+const toolGroups = [
+  {
+    label: 'Read',
+    accent: 'secondary',
+    tools: ['list_projects', 'list_states', 'list_tasks', 'get_task_detail', 'list_members', 'list_overdue_tasks'],
+  },
+  {
+    label: 'Write',
+    accent: 'primary',
+    tools: ['create_task', 'update_task', 'delete_task', 'move_task', 'assign_task', 'add_comment'],
+  },
+  {
+    label: 'Analyze',
+    accent: 'secondary',
+    tools: ['analyze_stale_tasks', 'summarize_project', 'generate_sprint', 'list_organizations'],
+  },
+];
+---
+
+<Base
+  meta_title="MCP Server for Project Management — SprintOS"
+  description="SprintOS ships a first-party Model Context Protocol (MCP) server. Let Claude, Cursor, or Windsurf manage your kanban board, generate sprints, and analyze velocity through natural language."
+  keywords="MCP project management, model context protocol task manager, claude mcp kanban, cursor mcp project management, AI project management, MCP server developer tools, claude sprint planning, windsurf mcp"
+  schema={[schemaOrganization(), schemaSoftwareApplication(), breadcrumb, faq]}
+>
+  <Navbar
+    client:load
+    items={navigationItems}
+    githubHref={navCta.href}
+    ctaLabel={navPrimary.label}
+    ctaHref={navPrimary.href}
+  />
+
+  <!-- Hero -->
+  <section class="relative pt-36 pb-20 overflow-hidden bg-background">
+    <div class="pointer-events-none absolute inset-0 nebula-glow-top"></div>
+    <div class="site-container relative z-10 max-w-4xl">
+      <nav aria-label="Breadcrumb" class="flex items-center gap-2 font-mono text-label-sm text-on-surface-muted mb-8">
+        <a href="/" class="hover:text-white transition-colors">Home</a>
+        <span>/</span>
+        <span class="text-primary">MCP Server</span>
+      </nav>
+
+      <div class="flex items-center gap-3 mb-6">
+        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 font-mono text-label-sm text-primary uppercase tracking-widest">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald animate-pulse-dot"></span>
+          First-Party MCP Server
+        </span>
+      </div>
+
+      <h1 class="font-display text-display-xl text-white mb-6 text-balance">
+        Let AI Manage Your<br />
+        <span class="text-primary">Sprint Board</span>
+      </h1>
+
+      <p class="text-body-lg text-on-surface-variant max-w-2xl mb-10 text-balance">
+        SprintOS is the only project management tool that ships a <strong class="text-white">native MCP server</strong> — not a community plugin, not a third-party wrapper. Claude, Cursor, Windsurf, and Zed connect directly and manage your board through natural language.
+      </p>
+
+      <div class="flex flex-col sm:flex-row gap-4">
+        <a
+          href="#setup"
+          class="inline-flex items-center gap-2 nebula-gradient text-white font-bold px-8 py-4 rounded-xl hover:brightness-110 transition-all shadow-[0_16px_40px_rgba(183,159,255,0.25)]"
+        >
+          <span class="material-symbols-outlined">bolt</span>
+          Set Up in 30 Seconds
+        </a>
+        <a
+          href="#tools"
+          class="inline-flex items-center gap-2 bg-transparent border border-white/10 text-white font-semibold px-8 py-4 rounded-xl hover:bg-white/5 transition-all"
+        >
+          View All MCP Tools
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Compatible tools banner -->
+  <div class="border-y border-white/[0.04] bg-surface py-8">
+    <div class="site-container">
+      <div class="flex flex-col sm:flex-row items-center gap-6">
+        <span class="font-mono text-label-sm text-on-surface-muted uppercase tracking-widest shrink-0">Works with</span>
+        <div class="flex flex-wrap items-center gap-3">
+          {mcpCompatible.map(tool => (
+            <span class="px-4 py-2 bg-surface-container rounded-lg ghost-border text-body-sm text-on-surface-variant font-medium">
+              {tool}
+            </span>
+          ))}
+          <span class="text-body-sm text-on-surface-muted">+ any MCP-compatible client</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Example prompts -->
+  <section class="py-28 bg-background">
+    <div class="site-container">
+      <div class="mb-16 max-w-xl">
+        <SectionLabel label="Natural Language Control" accent="primary" />
+        <h2 class="font-display text-display-md text-white mt-4 mb-4">
+          Say It. It Happens.
+        </h2>
+        <p class="text-body-lg text-on-surface-variant">
+          Every action you can take in the SprintOS TUI is available to your AI agent. Here's what your team can do from inside Claude or Cursor.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        {examplePrompts.map(p => (
+          <div class="feature-card p-7 rounded-2xl bg-surface-low ghost-border flex flex-col gap-4">
+            <span class="material-symbols-outlined text-primary text-2xl">{p.icon}</span>
+            <blockquote class="font-display text-headline-sm text-white leading-snug">{p.prompt}</blockquote>
+            <p class="text-body-sm text-on-surface-variant leading-relaxed flex-1">{p.detail}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Setup section -->
+  <section id="setup" class="py-28 bg-surface">
+    <div class="site-container max-w-4xl">
+      <div class="mb-12">
+        <SectionLabel label="Setup Guide" accent="secondary" />
+        <h2 class="font-display text-display-md text-white mt-4 mb-4">
+          Connect in 30 Seconds
+        </h2>
+        <p class="text-body-lg text-on-surface-variant">
+          SprintOS auto-detects your AI tool and writes the config file. No manual JSON editing.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-8 mb-12">
+        <!-- Step 1 -->
+        <div class="space-y-6">
+          <div class="flex gap-5">
+            <div class="w-8 h-8 rounded-full bg-primary/15 text-primary flex items-center justify-center font-mono text-sm font-bold shrink-0">1</div>
+            <div>
+              <h3 class="font-display text-headline-sm text-white mb-2">Start the MCP server</h3>
+              <p class="text-body-sm text-on-surface-variant mb-3">Run this once. The server stays alive as long as SprintOS is running.</p>
+              <div class="bg-background rounded-xl border border-white/5 overflow-hidden">
+                <div class="px-4 py-2.5 border-b border-white/5">
+                  <span class="font-mono text-xs text-on-surface-muted italic"># Terminal</span>
+                </div>
+                <pre class="p-4 font-mono text-mono-sm text-on-surface"><span class="text-primary">$</span> sprintos mcp</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex gap-5">
+            <div class="w-8 h-8 rounded-full bg-primary/15 text-primary flex items-center justify-center font-mono text-sm font-bold shrink-0">2</div>
+            <div>
+              <h3 class="font-display text-headline-sm text-white mb-2">Or use the guided TUI setup</h3>
+              <p class="text-body-sm text-on-surface-variant mb-3">SprintOS detects your AI tool and writes the config automatically.</p>
+              <div class="bg-background rounded-xl border border-white/5 p-4 font-mono text-mono-sm text-on-surface-variant space-y-1">
+                <div><span class="text-primary">sprintos start</span></div>
+                <div class="pl-4 text-on-surface-muted">→ Organization Settings</div>
+                <div class="pl-4 text-on-surface-muted">→ Press <span class="text-white font-bold">m</span></div>
+                <div class="pl-4 text-on-surface-muted">→ Select your AI tool</div>
+                <div class="pl-4 text-emerald">→ Config written ✓</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex gap-5">
+            <div class="w-8 h-8 rounded-full bg-primary/15 text-primary flex items-center justify-center font-mono text-sm font-bold shrink-0">3</div>
+            <div>
+              <h3 class="font-display text-headline-sm text-white mb-2">Restart your AI tool</h3>
+              <p class="text-body-sm text-on-surface-variant">Fully quit and relaunch Claude Desktop, Cursor, Windsurf, or Zed. SprintOS will appear as a connected tool.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Config examples -->
+        <div class="space-y-4">
+          <h3 class="font-display text-headline-sm text-white mb-4">Auto-generated configs</h3>
+
+          <div class="bg-background rounded-xl border border-white/5 overflow-hidden">
+            <div class="px-4 py-2.5 border-b border-white/5 flex items-center justify-between">
+              <span class="font-mono text-xs text-on-surface-muted">Claude Desktop</span>
+              <span class="font-mono text-xs text-on-surface-muted">claude_desktop_config.json</span>
+            </div>
+            <pre class="p-4 font-mono text-mono-sm leading-relaxed overflow-x-auto scrollbar-hide">{`{
+  `}<span class="syntax-keyword">"mcpServers"</span>{`: {
+    `}<span class="syntax-keyword">"sprintos"</span>{`: {
+      `}<span class="syntax-keyword">"command"</span>{`: `}<span class="syntax-string">"sprintos"</span>{`,
+      `}<span class="syntax-keyword">"args"</span>{`: [`}<span class="syntax-string">"mcp"</span>{`]
+    }
+  }
+}`}</pre>
+          </div>
+
+          <div class="bg-background rounded-xl border border-white/5 overflow-hidden">
+            <div class="px-4 py-2.5 border-b border-white/5 flex items-center justify-between">
+              <span class="font-mono text-xs text-on-surface-muted">Cursor</span>
+              <span class="font-mono text-xs text-on-surface-muted">~/.cursor/mcp.json</span>
+            </div>
+            <pre class="p-4 font-mono text-mono-sm leading-relaxed overflow-x-auto scrollbar-hide">{`{
+  `}<span class="syntax-keyword">"sprintos"</span>{`: {
+    `}<span class="syntax-keyword">"command"</span>{`: `}<span class="syntax-string">"sprintos"</span>{`,
+    `}<span class="syntax-keyword">"args"</span>{`: [`}<span class="syntax-string">"mcp"</span>{`]
+  }
+}`}</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MCP tools reference -->
+  <section id="tools" class="py-28 bg-background">
+    <div class="site-container">
+      <div class="mb-14">
+        <SectionLabel label="MCP Tool Reference" />
+        <h2 class="font-display text-display-md text-white mt-4 mb-4">
+          {mcpTools.length} Tools Available
+        </h2>
+        <p class="text-body-lg text-on-surface-variant max-w-xl">
+          Every action you can perform in the TUI is exposed as an MCP tool. Your AI agent has full read/write access to your board.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {toolGroups.map(group => (
+          <div>
+            <h3 class={`font-mono text-label-sm uppercase tracking-widest mb-5 ${group.accent === 'secondary' ? 'text-secondary' : 'text-primary'}`}>
+              {group.label}
+            </h3>
+            <div class="space-y-2">
+              {group.tools.map(tool => (
+                <div class="flex items-center gap-3 py-2.5 border-b border-white/[0.04]">
+                  <span class={`w-1.5 h-1.5 rounded-full shrink-0 ${group.accent === 'secondary' ? 'bg-secondary' : 'bg-primary'}`}></span>
+                  <code class="font-mono text-mono-sm text-on-surface">{tool}</code>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Why native vs community -->
+  <section class="py-28 bg-surface">
+    <div class="site-container max-w-4xl">
+      <div class="mb-12">
+        <SectionLabel label="Native vs Community" accent="secondary" />
+        <h2 class="font-display text-display-md text-white mt-4">
+          Why Native Matters
+        </h2>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-5">
+        <div class="p-8 rounded-2xl bg-surface-low ghost-border">
+          <h3 class="font-display text-headline-sm text-white mb-5 flex items-center gap-3">
+            <span class="w-2 h-2 rounded-full bg-secondary"></span>
+            SprintOS — Native MCP
+          </h3>
+          <ul class="space-y-3">
+            {[
+              'Ships inside the binary — zero extra install',
+              'Full read/write access to all data models',
+              'Maintained by the same team as the product',
+              'Auto-configured by the TUI setup wizard',
+              'Always in sync with the latest API',
+              'Free — included in the MIT-licensed core',
+            ].map(item => (
+              <li class="flex items-start gap-3 text-body-sm text-on-surface-variant">
+                <span class="material-symbols-outlined text-secondary text-sm shrink-0 mt-0.5">check_circle</span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div class="p-8 rounded-2xl bg-surface-low ghost-border">
+          <h3 class="font-display text-headline-sm text-on-surface-muted mb-5 flex items-center gap-3">
+            <span class="w-2 h-2 rounded-full bg-error/50"></span>
+            Linear / Jira — Community MCP
+          </h3>
+          <ul class="space-y-3">
+            {[
+              'Separate install and maintenance required',
+              'Partial API coverage — often read-only',
+              'Community-maintained, may lag behind',
+              'Manual JSON config required',
+              'Breaks when the product API changes',
+              'Requires separate API key management',
+            ].map(item => (
+              <li class="flex items-start gap-3 text-body-sm text-on-surface-muted">
+                <span class="material-symbols-outlined text-error/60 text-sm shrink-0 mt-0.5">cancel</span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="py-28 bg-background">
+    <div class="site-container max-w-3xl">
+      <div class="mb-12">
+        <SectionLabel label="FAQ" align="center" />
+        <h2 class="font-display text-display-md text-white mt-4 text-center">Common Questions</h2>
+      </div>
+      <div class="space-y-4">
+        {[
+          { q: 'Is the MCP server free?', a: 'Yes. The MCP server is part of the MIT-licensed SprintOS core — free forever, no subscription, no API key.' },
+          { q: 'Does it work offline?', a: 'Yes. The MCP server runs locally as part of the SprintOS binary. No external API calls are made. Your AI agent communicates with your local SprintOS instance.' },
+          { q: 'Can multiple AI agents connect at once?', a: 'Yes. The MCP server supports multiple simultaneous connections. Claude Desktop and Cursor can both be connected to the same SprintOS instance.' },
+          { q: 'What AI tools are supported?', a: 'Any MCP-compatible client: Claude Desktop, Cursor, Windsurf, Zed, and any editor or agent that implements the open MCP standard.' },
+          { q: 'Does my AI agent have write access?', a: 'Yes — by design. Your agent can create, update, move, delete tasks, generate sprints, and assign team members. You remain in control via your AI tool\'s permission model.' },
+        ].map(item => (
+          <details class="group bg-surface-low ghost-border rounded-xl overflow-hidden">
+            <summary class="flex items-center justify-between px-6 py-5 cursor-pointer list-none font-display text-headline-sm text-white">
+              {item.q}
+              <span class="material-symbols-outlined text-on-surface-muted group-open:rotate-180 transition-transform duration-200">expand_more</span>
+            </summary>
+            <p class="px-6 pb-5 text-body-md text-on-surface-variant leading-relaxed">{item.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-20 bg-surface">
+    <div class="site-container">
+      <div class="relative rounded-3xl p-16 text-center overflow-hidden bg-surface-container ghost-border">
+        <div class="pointer-events-none absolute inset-0 nebula-glow-top opacity-80"></div>
+        <div class="relative z-10 max-w-xl mx-auto">
+          <h2 class="font-display text-display-md text-white mb-4">Ready to Ship Faster?</h2>
+          <p class="text-body-lg text-on-surface-variant mb-8">Install SprintOS and connect your AI agent in under 2 minutes.</p>
+          <div class="flex flex-col sm:flex-row justify-center gap-4">
+            <a href="/#install" class="inline-flex items-center gap-2 nebula-gradient text-white font-bold px-8 py-4 rounded-xl hover:brightness-110 transition-all">
+              <span class="material-symbols-outlined">terminal</span>
+              Install SprintOS
+            </a>
+            <a href="https://github.com/varmiguemunoz/sprintos" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 bg-transparent border border-white/10 text-white font-semibold px-8 py-4 rounded-xl hover:bg-white/5 transition-all">
+              <span class="material-symbols-outlined">code</span>
+              View on GitHub
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <SprintOSFooter groups={footerLinks} meta={footerMeta} />
+</Base>

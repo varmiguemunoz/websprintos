@@ -47,7 +47,8 @@ const pageTitle = pageNum > 1
   ? `Blog — Page ${pageNum} — SprintOS`
   : 'Blog — SprintOS | Terminal Tooling, AI Agents & Developer Productivity';
 
-const canonicalPath = pageNum > 1 ? `/blog/${pageNum}` : '/blog';
+const prevUrl = page?.url?.prev ?? null;
+const nextUrl = page?.url?.next ?? null;
 ---
 
 <Base
@@ -55,6 +56,8 @@ const canonicalPath = pageNum > 1 ? `/blog/${pageNum}` : '/blog';
   description="Technical deep-dives on terminal tooling, developer productivity, AI agents, MCP integrations, and production systems. No fluff — just what actually ships."
   keywords="developer blog, terminal tooling, CLI productivity, MCP agents, sprint planning, golang backend, AI automation, developer productivity tips"
   schema={[schemaBlogCollectionPage(pageNum), schemaOrganization()]}
+  prevUrl={prevUrl}
+  nextUrl={nextUrl}
 >
   <Navbar
     client:load

@@ -10,7 +10,7 @@ import SprintOSFooter   from '@/components/organisms/SprintOSFooter.astro';
 import Code             from '@components/mdx/Code.astro';
 import { navigationItems, navCta, navPrimary } from '@/data/navigation';
 import { footerLinks, footerMeta }             from '@/data/footer';
-import { schemaBlogPosting, schemaOrganization, categoryLabels } from '@/data/seo';
+import { schemaBlogPosting, schemaOrganization, schemaBreadcrumb, categoryLabels, SITE } from '@/data/seo';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
@@ -55,6 +55,13 @@ const pageKeywords = [
   'SprintOS blog',
   'developer productivity',
 ].join(', ');
+
+const slug = post.params?.slug ?? post.slug;
+const breadcrumbSchema = schemaBreadcrumb([
+  { name: 'Home',  url: SITE.url },
+  { name: 'Blog',  url: `${SITE.url}/blog` },
+  { name: post.data.title, url: `${SITE.url}/blog/${slug}` },
+]);
 ---
 
 <Base
@@ -67,7 +74,7 @@ const pageKeywords = [
   updatedDate={post.data.updatedDate ? new Date(post.data.updatedDate) : undefined}
   articleTags={post.data.tags}
   articleAuthor={post.data.authors?.[0] ?? 'Miguel Angel Jaramillo Muñoz'}
-  schema={[postSchema, schemaOrganization()]}
+  schema={[postSchema, schemaOrganization(), breadcrumbSchema]}
 >
   <Navbar
     client:load

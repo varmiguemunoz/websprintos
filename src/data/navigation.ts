@@ -8,7 +8,8 @@ export const navigationItems: NavItem[] = [
   { label: 'Install',  href: '#install' },
   { label: 'CLI',      href: '#cli' },
   { label: 'API',      href: '#api' },
-  { label: 'MCP',      href: '#mcp' },
+  { label: 'MCP',      href: '/mcp' },
+  { label: 'Compare',  href: '/vs/linear' },
   { label: 'Pricing',  href: '#pricing' },
   { label: 'Blog',     href: '/blog' },
 ];
