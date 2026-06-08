@@ -1,39 +1,37 @@
 import { defineConfig } from 'astro/config';
-import mdx       from '@astrojs/mdx';
-import tailwind  from '@astrojs/tailwind';
-import Compress  from 'astro-compress';
-import sitemap   from '@astrojs/sitemap';
+import mdx from '@astrojs/mdx';
+import tailwind from '@astrojs/tailwind';
+import Compress from 'astro-compress';
+import sitemap from '@astrojs/sitemap';
 import robotsTxt from 'astro-robots-txt';
-import react     from '@astrojs/react';
-import vercel    from '@astrojs/vercel';
+import react from '@astrojs/react';
+import vercel from '@astrojs/vercel';
 
-const SITE_URL = 'https://sprintos.dev';
+const SITE_URL = 'https://www.sprintos.run';
 
 export default defineConfig({
-  site:   SITE_URL,
+  site: SITE_URL,
   output: 'server',
 
   prefetch: {
-    prefetchAll:     true,
+    prefetchAll: true,
     defaultStrategy: 'viewport',
   },
 
   adapter: vercel({
-    webAnalytics:  { enabled: true },
+    webAnalytics: { enabled: true },
     speedInsights: { enabled: true },
   }),
 
   image: {
-    remotePatterns: [
-      { protocol: 'https', hostname: 'res.cloudinary.com' },
-    ],
+    remotePatterns: [{ protocol: 'https', hostname: 'res.cloudinary.com' }],
     service: { entrypoint: 'astro/assets/services/sharp' },
   },
 
   markdown: {
     shikiConfig: {
       theme: 'material-theme-palenight',
-      wrap:  true,
+      wrap: true,
     },
   },
 
@@ -42,7 +40,7 @@ export default defineConfig({
       syntaxHighlight: 'shiki',
       shikiConfig: {
         theme: 'material-theme-palenight',
-        wrap:  true,
+        wrap: true,
       },
     }),
 
@@ -51,29 +49,24 @@ export default defineConfig({
     react(),
 
     Compress({
-      CSS:        true,
+      CSS: true,
       HTML: {
         removeAttributeQuotes: false,
-        removeComments:        true,
-        collapseWhitespace:    true,
+        removeComments: true,
+        collapseWhitespace: true,
       },
-      Image:      false,
+      Image: false,
       JavaScript: true,
-      SVG:        true,
+      SVG: true,
     }),
 
     sitemap({
-      filter: page =>
+      filter: (page) =>
         !page.includes('/funnel/') &&
         !page.includes('/payment/') &&
         !page.includes('/thank-you/') &&
         !page.includes('/api/'),
-      customPages: [
-        SITE_URL,
-        `${SITE_URL}/blog`,
-        `${SITE_URL}/privacy-policy`,
-        `${SITE_URL}/terms-and-conditions`,
-      ],
+      customPages: [SITE_URL, `${SITE_URL}/blog`, `${SITE_URL}/privacy-policy`, `${SITE_URL}/terms-and-conditions`],
       serialize(item) {
         /* Homepage — highest priority */
         if (item.url === `${SITE_URL}/`) {
@@ -99,19 +92,18 @@ export default defineConfig({
     robotsTxt({
       policy: [
         {
-          userAgent:  '*',
-          allow:      '/',
-          disallow:   ['/api/'],
+          userAgent: '*',
+          allow: '/',
+          disallow: ['/api/'],
           crawlDelay: 0,
         },
         {
-          userAgent:  'Googlebot',
-          allow:      '/',
-          disallow:   ['/api/'],
+          userAgent: 'Googlebot',
+          allow: '/',
+          disallow: ['/api/'],
           crawlDelay: 0,
         },
       ],
-      /* ✅ Fixed: now points to the correct domain */
       sitemap: `${SITE_URL}/sitemap-index.xml`,
     }),
   ],
@@ -126,12 +118,12 @@ export default defineConfig({
           },
         },
       },
-      minify:            'terser',
+      minify: 'terser',
       terserOptions: {
         compress: {
           drop_console: true,
           drop_debugger: true,
-          passes:       2,
+          passes: 2,
         },
         format: { comments: false },
       },

@@ -1,5 +1,5 @@
 export const SITE = {
-  url:         'https://sprintos.dev',
+  url:         'https://www.sprintos.run',
   name:        'SprintOS',
   title:       'SprintOS — The Developer Operating System',
   description: 'The terminal-first project manager for developer teams. Manage sprints, track time, and automate workflows from your terminal. AI-native, GitHub-connected, MCP ready.',
@@ -12,8 +12,8 @@ export const SITE = {
     url:   'https://github.com/varmiguemunoz',
     github:'https://github.com/varmiguemunoz',
   },
-  ogImage:     'https://sprintos.dev/og.png',
-  logo:        'https://sprintos.dev/logo.png',
+  ogImage:     'https://www.sprintos.run/og.png',
+  logo:        'https://www.sprintos.run/logo.png',
   github:      'https://github.com/varmiguemunoz/sprintos',
   version:     '2.4',
 };
